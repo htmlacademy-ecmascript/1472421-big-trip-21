@@ -9,25 +9,27 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     clean: true,
   },
-  devtools: 'source-map',
+  devtool: 'source-map',
   plugins: [
-    new HtmlPlugin ({
+    new HtmlPlugin({
       template: 'public/index.html',
     }),
     new CopyPlugin ({
-      patterns: [{
-        from: 'public',
-        globOptions: {
-          ignore: ['**/index.html'],
+      patterns: [
+        {
+          from: 'public',
+          globOptions: {
+            ignore: ['**/index.html'],
+          },
         },
-      }]
+      ],
     }),
   ],
   module: {
     rules:[
       {
         test: /\.js$/,
-        exlude: /(node_modules)/,
+        exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
           options: {
