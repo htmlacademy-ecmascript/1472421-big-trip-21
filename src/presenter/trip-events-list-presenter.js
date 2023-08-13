@@ -36,6 +36,6 @@ export default class TripEventsPresenter{
     for(let i = 0; i < 3; i++){
       render(this.tripEventsItemPoint, this.tripEventsList.getElement());
       render(new TripEventsPoint(), this.tripEventsItemPoint.getElement());
-    };
+    }
   }
 }
