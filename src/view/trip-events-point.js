@@ -1,4 +1,4 @@
-import { createElement } from "../render";
+import { createElement } from '../render';
 
 function createTripEventsPoint() {
   return `
@@ -37,7 +37,7 @@ function createTripEventsPoint() {
         <span class="visually-hidden">Open event</span>
       </button>
     </div>
-  `
+  `;
 }
 
 export default class TripEventsPoint {

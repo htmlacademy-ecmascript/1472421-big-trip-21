@@ -1,7 +1,6 @@
 import {createElement} from '../render.js';
 
 
-
 function createTripMainControl() {
   return `
   <div class="trip-main__trip-controls  trip-controls">

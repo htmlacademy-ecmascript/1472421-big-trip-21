@@ -1,4 +1,4 @@
-import { createElement } from "../render";
+import { createElement } from '../render';
 
 function createTripSortInputPrice() {
   return `
@@ -6,7 +6,7 @@ function createTripSortInputPrice() {
       <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
       <label class="trip-sort__btn" for="sort-price">Price</label>
     </div>
-  `
+  `;
 }
 
 export default class TripSortinputPrice {

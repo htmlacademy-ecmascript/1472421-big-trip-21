@@ -1,4 +1,4 @@
-import { createElement } from "../render";
+import { createElement } from '../render';
 
 function createTripEventsNewPoint() {
   return `
@@ -112,7 +112,7 @@ function createTripEventsNewPoint() {
         </section>
       </section>
     </form>
-  `
+  `;
 }
 
 export default class TripEventsNewPoint {

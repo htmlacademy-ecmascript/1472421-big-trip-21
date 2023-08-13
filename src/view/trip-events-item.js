@@ -1,9 +1,9 @@
-import { createElement } from "../render";
+import { createElement } from '../render';
 
 function createTripEventsItem() {
   return `
     <li class="trip-events__item"></li>
-  `
+  `;
 }
 
 export default class TripEventsItem {

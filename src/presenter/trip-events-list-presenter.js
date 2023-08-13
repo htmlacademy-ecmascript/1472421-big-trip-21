@@ -11,7 +11,6 @@ import TripEventsEditPoint from '../view/trip-events-edit-point.js';
 import TripEventsPoint from '../view/trip-events-point.js';
 
 
-
 export default class TripEventsPresenter{
   tripSortForm = new TripSortForm();
   tripEventsList = new TripEventsList();
@@ -36,7 +35,7 @@ export default class TripEventsPresenter{
 
     for(let i = 0; i < 3; i++){
       render(this.tripEventsItemPoint, this.tripEventsList.getElement());
-      render(new TripEventsPoint(), this.tripEventsItemPoint.getElement())
-    }
+      render(new TripEventsPoint(), this.tripEventsItemPoint.getElement());
+    };
   }
 }
