@@ -4,6 +4,7 @@ import TripMainControl from './view/trip-main-control.js';
 import NewPointButton from './view/trip-main-new-point-button.js';
 import TripEventsPresenter from './presenter/trip-events-list-presenter.js';
 
+
 const tripMain = document.querySelector('.trip-main');
 const tripMainInfo = new TripMainInfo();
 const tripMainControl = new TripMainControl();
@@ -17,5 +18,3 @@ render(tripMainControl, tripMain);
 render(newPointButton, tripMain);
 
 tripEventsPresenter.init();
-
-

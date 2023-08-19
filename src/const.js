@@ -10,6 +10,12 @@ DISCRIPTIONS.set('Chamonix', 'Chamonix-Mont-Blanc (usually shortened to Chamonix
 DISCRIPTIONS.set('Amsterdam', 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, quaerat!');
 DISCRIPTIONS.set('Geneva', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quae explicabo quia voluptatem eius!');
 
-export {DISCRIPTIONS};
-
 export const DESTINATIONS_PHOTOS = ['img/photos/1.jpg', 'img/photos/2.jpg', 'img/photos/3.jpg'];
+
+const OFFERS = new Map;
+
+for(let i = 0; i < POINT_TYPE.length - 1; i++){
+  OFFERS.set(POINT_TYPE[i], {title: 'upgrade', price: 50});
+}
+
+export {DISCRIPTIONS, OFFERS};

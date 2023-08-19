@@ -1,24 +1,6 @@
-import { getRandomArrayElement } from '../utils';
-import { DESTINATIONS } from '../const';
-import { DISCRIPTIONS } from '../const';
-import { DESTINATIONS_PHOTOS } from '../const';
-
-/*
-  Создаем моковые данные для заполнения шаблона отрисовки точки маршрута
-  данные в пункт destinations попадают из отдельной структуры данных
-  */
-/* const mockPoints = [
-  {
-    id: '1',
-    datetime : '2019-03-18',
-    type: 'Drive',
-    typeIcon: 'img/icons/drive.png',
-    destinations: '',
-    isFavorite: false,
-    offers : [],
-  }
-]
- */
+import { getRandomArrayElement, getRandomInt } from '../utils';
+import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE } from '../const';
+import dayjs from 'dayjs';
 
 /* Генерирует случайный id от 0 до 2 */
 function generateId() {
@@ -40,6 +22,26 @@ function generateDestinations() {
         discription: 'Any discription'
       }
     ]
+  };
+}
+
+/* Создаем массив с сгунерированными пунктами назначения */
+const destinationsMock = new Array(5).fill().map(generateDestinations);
+
+/* Генерируем объект точки маршута */
+export function generateTripPoin() {
+
+  const type = getRandomArrayElement(POINT_TYPE);
+
+  return {
+    id: generateId(),
+    basePrice: getRandomInt(300, 800),
+    dateFrom: dayjs().add(200, 'minutes').format('DD/MM/YY HH:MM'),
+    dateTo: dayjs().add(260, 'minutes').format('DD/MM/YY HH:MM'),
+    destination: getRandomArrayElement(destinationsMock).id,
+    isFavorite: Boolean(getRandomInt(0, 1)),
+    offers: OFFERS.get(type),
+    type
   };
 }
 
