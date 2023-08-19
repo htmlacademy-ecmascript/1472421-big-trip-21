@@ -1,23 +1,30 @@
 import { createElement } from '../render';
 
-function createTripEventsPoint() {
+function createTripEventsPoint(tripPoint) {
+
+  /* Деструктурируем объект, распределяя значение полей объекта
+    по одноименным созданным переменным
+  */
+  const {type, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite} = tripPoint;
+
+  /* Вставляем переменные в соответствующие места в шаблоне */
   return `
     <div class="event">
       <time class="event__date" datetime="2019-03-18">MAR 18</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/drive.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="${typeIcon}" alt="Event type icon">
       </div>
-      <h3 class="event__title">Drive Chamonix</h3>
+      <h3 class="event__title">${type} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T14:30">14:30</time>
+          <time class="event__start-time" datetime="${dateFrom}">${dateFrom.format('HH:MM')}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T16:05">16:05</time>
+          <time class="event__end-time" datetime="${dateTo}">${dateTo.format('HH:MM')}</time>
         </p>
         <p class="event__duration">01H 35M</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">160</span>
+        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
@@ -27,7 +34,7 @@ function createTripEventsPoint() {
           <span class="event__offer-price">200</span>
         </li>
       </ul>
-      <button class="event__favorite-btn  event__favorite-btn--active" type="button">
+      <button class="event__favorite-btn  ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -41,8 +48,18 @@ function createTripEventsPoint() {
 }
 
 export default class TripEventsPoint {
+
+  /* Делаем возможным принимать на вход объект со свойством, хранящим в себе объект
+    моковых данных
+   */
+  constructor ({tripPoint}){
+    /* Записываем объект моковых данных точки маршрута в свойство  */
+    this.tripPoint = tripPoint;
+  }
+
   getTemplate() {
-    return createTripEventsPoint();
+    /* Передаем в функцию создания шаблона объект моковых данных */
+    return createTripEventsPoint(this.tripPoint);
   }
 
   getElement() {

@@ -1,5 +1,5 @@
 import { getRandomArrayElement, getRandomInt } from '../utils';
-import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE } from '../const';
+import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE, POINT_TYPE_ICON } from '../const';
 import dayjs from 'dayjs';
 
 /* Генерирует случайный id от 0 до 2 */
@@ -29,20 +29,21 @@ function generateDestinations() {
 const destinationsMock = new Array(5).fill().map(generateDestinations);
 
 /* Генерируем объект точки маршута */
-export function generateTripPoin() {
+function generateTripPoin() {
 
   const type = getRandomArrayElement(POINT_TYPE);
 
   return {
     id: generateId(),
     basePrice: getRandomInt(300, 800),
-    dateFrom: dayjs().add(200, 'minutes').format('DD/MM/YY HH:MM'),
-    dateTo: dayjs().add(260, 'minutes').format('DD/MM/YY HH:MM'),
-    destination: getRandomArrayElement(destinationsMock).id,
+    dateFrom: dayjs().add(0, 'minutes'),
+    dateTo: dayjs().add(60, 'minutes'),
+    destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
     offers: OFFERS.get(type),
-    type
+    type,
+    typeIcon: POINT_TYPE_ICON.get(type)
   };
 }
 
-
+export {destinationsMock, generateTripPoin};

@@ -1,6 +1,14 @@
 export const POINT_TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
-export const POINT_TYPE_ICON = POINT_TYPE.map((item) => `../img/icons/${item.toLowerCase()}.png`);
+export const POINT_TYPE_ICON = new Map;
+
+/* Заполняем экземляр класса Map (POINT_TYPE_ICON) данными,
+  где ключ - тип точки маршрута
+  значение - ссылка на иконку, соответствующую этому типу
+*/
+POINT_TYPE.forEach( (item) =>
+  POINT_TYPE_ICON.set(item, `../img/icons/${item.toLowerCase()}.png`)
+);
 
 export const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Geneva'];
 
