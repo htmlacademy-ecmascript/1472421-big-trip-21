@@ -6,7 +6,6 @@ import TripEventsEditPoint from '../view/trip-events-edit-point.js';
 import TripEventsPoint from '../view/trip-events-point.js';
 
 
-
 export default class TripEventsPresenter{
   tripSortForm = new TripSortForm();
   tripEventsList = new TripEventsList();
@@ -23,7 +22,7 @@ export default class TripEventsPresenter{
 
   init() {
     /* Создаем свойство, в котором будет храниться копия массива моковох данных точек маршрута*/
-    this.tripPoints = [...this.tripPointsModel.getTripPoint()]
+    this.tripPoints = [...this.tripPointsModel.getTripPoint()];
 
     render(this.tripSortForm, this.tripEventsContainer);
 

@@ -1,4 +1,4 @@
-import { generateTripPoin } from "../mock/trip-point";
+import { generateTripPoin } from '../mock/trip-point';
 
 const POINT_COUNT = 3;
 
@@ -13,5 +13,5 @@ export default class TripPointsModel {
 
   getTripPoint(){
     return this.tripPoints;
-  };
+  }
 }

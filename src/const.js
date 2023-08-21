@@ -6,7 +6,7 @@ export const POINT_TYPE_ICON = new Map;
   где ключ - тип точки маршрута
   значение - ссылка на иконку, соответствующую этому типу
 */
-POINT_TYPE.forEach( (item) =>
+POINT_TYPE.forEach((item) =>
   POINT_TYPE_ICON.set(item, `../img/icons/${item.toLowerCase()}.png`)
 );
 
@@ -22,8 +22,9 @@ export const DESTINATIONS_PHOTOS = ['img/photos/1.jpg', 'img/photos/2.jpg', 'img
 
 const OFFERS = new Map;
 
+
 for(let i = 0; i < POINT_TYPE.length - 1; i++){
-  OFFERS.set(POINT_TYPE[i], {title: 'upgrade', price: 50});
+  OFFERS.set(POINT_TYPE[i], [{title: 'upgrade', price: 50}, {title: 'upgrade', price: 250}]);
 }
 
 export {DISCRIPTIONS, OFFERS};
