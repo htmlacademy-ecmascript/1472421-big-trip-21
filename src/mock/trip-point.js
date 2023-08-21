@@ -25,11 +25,11 @@ function generateDestinations() {
   };
 }
 
-/* Создаем массив с сгунерированными пунктами назначения */
+/* Создаем массив с сгенерированными пунктами назначения */
 const destinationsMock = new Array(5).fill().map(generateDestinations);
 
 /* Генерируем объект точки маршута */
-function generateTripPoin() {
+function generateTripPoint() {
 
   const type = getRandomArrayElement(POINT_TYPE);
 
@@ -40,10 +40,10 @@ function generateTripPoin() {
     dateTo: dayjs().add(60, 'minutes'),
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
+    typeIcon: POINT_TYPE_ICON.get(type),
     offers: OFFERS.get(type),
     type,
-    typeIcon: POINT_TYPE_ICON.get(type)
   };
 }
 
-export {destinationsMock, generateTripPoin};
+export {destinationsMock, generateTripPoint};

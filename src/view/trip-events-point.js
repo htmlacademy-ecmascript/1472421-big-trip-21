@@ -11,14 +11,14 @@ function createSelectedOffers(offers) {
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${item.price}</span>
       </li>
-    `
-  })
+    `;
+  });
 
   return `
     <ul class="event__selected-offers">
       ${offersList}
     </ul>
-  `
+  `;
 }
 
 function createTripEventsPoint(tripPoint) {
@@ -26,9 +26,9 @@ function createTripEventsPoint(tripPoint) {
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const {type, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite, offers} = tripPoint;
+  const {offers, type, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
 
-  const favoritePointClassName = isFavorite ? 'event__favorite-btn--active': '';
+  const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
   const offersList = createSelectedOffers(offers);
 

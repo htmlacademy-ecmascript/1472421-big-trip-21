@@ -23,7 +23,7 @@ export const DESTINATIONS_PHOTOS = ['img/photos/1.jpg', 'img/photos/2.jpg', 'img
 const OFFERS = new Map;
 
 
-for(let i = 0; i < POINT_TYPE.length - 1; i++){
+for(let i = 0; i <= POINT_TYPE.length - 1; i++){
   OFFERS.set(POINT_TYPE[i], [{title: 'upgrade', price: 50}, {title: 'upgrade', price: 250}]);
 }
 

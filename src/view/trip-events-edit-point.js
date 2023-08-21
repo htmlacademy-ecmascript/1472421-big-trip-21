@@ -1,6 +1,14 @@
 import { createElement } from '../render';
 
-function createTripEventsEditPoint() {
+function createTripType(type) {
+  return `
+  `
+}
+
+function createTripEventsEditPoint(tripEditPoint) {
+
+  const {type, destination, typeIcon, dateFrom, dateTo, basePrice, offers} = tripEditPoint;
+
   return `
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -16,7 +24,7 @@ function createTripEventsEditPoint() {
               <legend class="visually-hidden">Event type</legend>
 
               <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
+                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" checked>
                 <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
               </div>
 
@@ -159,8 +167,13 @@ function createTripEventsEditPoint() {
 }
 
 export default class TripEventsEditPoint {
+
+  constructor (tripEditPoint) {
+    this.tripEditPoint = tripEditPoint;
+  }
+
   getTemplate() {
-    return createTripEventsEditPoint();
+    return createTripEventsEditPoint(this.tripEditPoint);
   }
 
   getElement() {

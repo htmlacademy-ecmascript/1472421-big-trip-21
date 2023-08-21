@@ -3,8 +3,8 @@ import TripMainInfo from './view/trip-main-info.js';
 import TripMainControl from './view/trip-main-control.js';
 import NewPointButton from './view/trip-main-new-point-button.js';
 import TripEventsPresenter from './presenter/trip-events-list-presenter.js';
-import TripPointsModel from './models/models-trip-point.js';
-
+import TripPointsModel from './models/model-trip-point.js';
+import EditTripPointModel from './models/model-edit-trip-point.js';
 
 const tripMain = document.querySelector('.trip-main');
 const tripMainInfo = new TripMainInfo();
@@ -14,12 +14,16 @@ const newPointButton = new NewPointButton();
 const tripEvents = document.querySelector('.trip-events');
 /* Создаем экземпляр класса TripPointModel, который может вернуть с помощью метода getTripPoint() массив моковых данных точек маршрута */
 const tripPointsModel = new TripPointsModel();
-/* Помещаем экземпляр  tripPointsModel в конструктор презентера в виде
-  второго свойства объекта, который передается на вход в конструктор
-*/
+
+const editTripPointModel = new EditTripPointModel();
+
 const tripEventsPresenter = new TripEventsPresenter({
   tripEventsContainer:tripEvents,
-  tripPointsModel
+  /* Помещаем экземпляр  tripPointsModel в конструктор презентера в виде
+  второго свойства объекта, который передается на вход в конструктор
+*/
+  tripPointsModel,
+  editTripPointModel
 });
 
 render(tripMainInfo, tripMain);
