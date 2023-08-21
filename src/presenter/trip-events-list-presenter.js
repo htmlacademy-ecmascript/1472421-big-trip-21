@@ -6,7 +6,6 @@ import TripEventsEditPoint from '../view/trip-events-edit-point.js';
 import TripEventsPoint from '../view/trip-events-point.js';
 
 
-
 export default class TripEventsPresenter{
   tripSortForm = new TripSortForm();
   tripEventsList = new TripEventsList();
@@ -30,7 +29,7 @@ export default class TripEventsPresenter{
 
     render(this.tripEventsList, this.tripEventsContainer);
     render(this.tripEventsItemEdit, this.tripEventsList.getElement());
-    render(new TripEventsEditPoint({tripEditPoint: this.tripEditPointsModel}), this.tripEventsItemEdit.getElement());
+    render(new TripEventsEditPoint(this.tripEditPointsModel.getEditTripPoint()), this.tripEventsItemEdit.getElement());
 
     for(let i = 0; i < 3; i++){
       /* Добавляем в список точек маршрута tripEventsList элемент списка <li>*/

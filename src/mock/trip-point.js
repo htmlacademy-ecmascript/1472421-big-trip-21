@@ -36,8 +36,8 @@ function generateTripPoint() {
   return {
     id: generateId(),
     basePrice: getRandomInt(300, 800),
-    dateFrom: dayjs().add(0, 'minutes'),
-    dateTo: dayjs().add(60, 'minutes'),
+    dateFrom: dayjs().add(getRandomInt(20, 200), 'minutes'),
+    dateTo: dayjs().add((getRandomInt(20, 200) + 60), 'minutes'),
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
     typeIcon: POINT_TYPE_ICON.get(type),

@@ -3,9 +3,9 @@ import { generateTripPoint } from '../mock/trip-point';
 
 export default class EditTripPointModel {
 
-  editTripPoints =  generateTripPoint();
+  editTripPoints = generateTripPoint();
 
-  getTripPoint(){
+  getEditTripPoint(){
     return this.editTripPoints;
   }
 }
