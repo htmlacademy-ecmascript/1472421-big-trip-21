@@ -27,7 +27,7 @@ const destinationsMock = new Array(5).fill().map(generateDestinations);
 /* Генерируем объект точки маршута */
 function generateTripPoint() {
 
-  const type = getRandomArrayElement(POINT_TYPE);
+  const tripType = getRandomArrayElement(POINT_TYPE);
 
   return {
     id: generateId(),
@@ -36,9 +36,9 @@ function generateTripPoint() {
     dateTo: dayjs().add((getRandomInt(20, 200) + 60), 'minutes'),
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
-    typeIcon: POINT_TYPE_ICON.get(type),
-    offers: OFFERS.get(type),
-    type,
+    typeIcon: POINT_TYPE_ICON.get(tripType),
+    offers: OFFERS.get(tripType),
+    tripType,
   };
 }
 

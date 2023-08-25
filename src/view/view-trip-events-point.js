@@ -26,7 +26,7 @@ function createTripEventsPoint(tripPoint) {
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const {offers, type, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
+  const {offers, tripType, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
 
   const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
@@ -39,7 +39,7 @@ function createTripEventsPoint(tripPoint) {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="${typeIcon}" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination.name}</h3>
+      <h3 class="event__title">${tripType} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${dateFrom.format('HH:MM')}</time>
