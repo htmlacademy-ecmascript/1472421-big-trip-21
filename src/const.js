@@ -14,7 +14,7 @@ const getpointTypeIcon = () => {
   );
 
   return pointTypeIcon;
-}
+};
 
 const getDiscription = () => {
   const discription = new Map;
@@ -24,7 +24,7 @@ const getDiscription = () => {
   discription.set('Geneva', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quae explicabo quia voluptatem eius!');
 
   return discription;
-}
+};
 
 const getOffers = () => {
   const offers = new Map;
@@ -35,7 +35,7 @@ const getOffers = () => {
 
   return offers;
 
-}
+};
 
 const OFFERS = getOffers();
 const DISCRIPTIONS = getDiscription();

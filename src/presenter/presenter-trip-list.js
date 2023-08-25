@@ -1,23 +1,20 @@
 import { render } from '../render.js';
-import TripSortForm from '../view/view-trip-sort-form.js';
-import TripList from '../view/view-trip-events-list.js';
-import TripListItem from '../view/view-trip-events-item.js';
 import TripEventsEditPoint from '../view/view-trip-edit-point.js';
-import TripEventsPoint from '../view/view-trip-events-point.js';
+import TripEventsPoint from '../view/view-trip-point.js';
 
 
 export default class tripListPresenter{
-  tripSortForm = new TripSortForm();
-  tripList = new TripList();
-  tripListItemEdit = new TripListItem();
-  tripListItemPoint = new TripListItem();
 
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
   */
-  constructor({tripEventsContainer, tripPointsModel}) {
+  constructor({tripEventsContainer, tripPointsModel, tripSortForm, tripList, tripListItemEdit, tripListItemPoint}) {
     this.tripEventsContainer = tripEventsContainer;
     this.tripPointsModel = tripPointsModel;
+    this.tripSortForm = tripSortForm;
+    this.tripList = tripList;
+    this.tripListItemEdit = tripListItemEdit;
+    this.tripListItemPoint = tripListItemPoint;
   }
 
   init() {
