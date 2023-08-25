@@ -1,11 +1,7 @@
-import { getRandomArrayElement, getRandomInt } from '../utils';
+import { getRandomArrayElement, getRandomInt, generateId } from '../utils';
 import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE, POINT_TYPE_ICON } from '../const';
 import dayjs from 'dayjs';
 
-/* Генерирует случайный id от 0 до 2 */
-function generateId() {
-  return Math.floor(Math.random() * 3);
-}
 
 /* Генерирует случайный пункт назначения */
 function generateDestinations() {
@@ -25,7 +21,7 @@ function generateDestinations() {
   };
 }
 
-/* Создаем массив с сгенерированными пунктами назначения */
+/* Создаем массив со сгенерированными пунктами назначения */
 const destinationsMock = new Array(5).fill().map(generateDestinations);
 
 /* Генерируем объект точки маршута */
@@ -46,4 +42,4 @@ function generateTripPoint() {
   };
 }
 
-export {destinationsMock, generateTripPoint};
+export {generateTripPoint};

@@ -1,14 +1,14 @@
 import { createElement } from '../render';
 
-function createTripEventsList() {
+function createTripEventsItem() {
   return `
-    <ul class="trip-events__list"></ul>
+    <li class="trip-events__item"></li>
   `;
 }
 
-export default class TripEventsList {
+export default class TripListItem {
   getTemplate() {
-    return createTripEventsList();
+    return createTripEventsItem();
   }
 
   getElement() {

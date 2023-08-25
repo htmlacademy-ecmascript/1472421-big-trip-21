@@ -1,4 +1,4 @@
-import { generateTripPoint } from '../mock/trip-point';
+import { generateTripPoint } from '../mock/mock-trip-point';
 
 
 export default class EditTripPointModel {
