@@ -21,7 +21,7 @@ function createSelectedOffers(offers) {
   `;
 }
 
-function createTripEventsPoint(tripPoint) {
+function createTripPointView(tripPoint) {
 
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
@@ -66,7 +66,7 @@ function createTripEventsPoint(tripPoint) {
   `;
 }
 
-export default class TripEventsPoint {
+export default class TripPointView {
 
   /* Делаем возможным принимать на вход объект со свойством, хранящим в себе объект
     моковых данных
@@ -78,7 +78,7 @@ export default class TripEventsPoint {
 
   getTemplate() {
     /* Передаем в функцию создания шаблона объект моковых данных */
-    return createTripEventsPoint(this.tripPoint);
+    return createTripPointView(this.tripPoint);
   }
 
   getElement() {

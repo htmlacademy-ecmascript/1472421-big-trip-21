@@ -36,7 +36,7 @@ function createOffersOptions(offers) {
   return offersOption;
 }
 
-function createTripEventsEditPoint(editTripPoints) {
+function createTripEditPointView(editTripPoints) {
 
   const {tripType, destination, typeIcon, dateFrom, dateTo, basePrice, offers} = editTripPoints;
 
@@ -114,14 +114,14 @@ function createTripEventsEditPoint(editTripPoints) {
   `;
 }
 
-export default class TripEventsEditPoint {
+export default class TripEditPointView {
 
   constructor (editTripPoints) {
     this.editTripPoints = editTripPoints;
   }
 
   getTemplate() {
-    return createTripEventsEditPoint(this.editTripPoints);
+    return createTripEditPointView(this.editTripPoints);
   }
 
   getElement() {
