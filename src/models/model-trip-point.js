@@ -1,5 +1,6 @@
 import { generateTripPoint } from '../mock/mock-trip-point';
 
+
 const POINT_COUNT = 4;
 
 export default class TripPointsModel {

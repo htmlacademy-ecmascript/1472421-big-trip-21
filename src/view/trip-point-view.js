@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createSelectedOffers(offers) {
 
@@ -66,30 +66,19 @@ function createTripPointView(tripPoint) {
   `;
 }
 
-export default class TripPointView {
+export default class TripPointView extends AbstractView {
 
   /* Делаем возможным принимать на вход объект со свойством, хранящим в себе объект
     моковых данных
    */
   constructor ({tripPoint}){
+    super();
     /* Записываем объект моковых данных точки маршрута в свойство  */
     this.tripPoint = tripPoint;
   }
 
-  getTemplate() {
+  get template() {
     /* Передаем в функцию создания шаблона объект моковых данных */
     return createTripPointView(this.tripPoint);
-  }
-
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

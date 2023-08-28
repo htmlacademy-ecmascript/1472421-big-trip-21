@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 import TripEditPointView from '../view/trip-edit-point-view.js';
 import TripPointView from '../view/trip-point-view.js';
 
@@ -24,18 +24,18 @@ export default class tripListPresenter{
     render(this.tripSortForm, this.tripEventsContainer);
 
     render(this.tripList, this.tripEventsContainer);
-    render(this.tripListItemEdit, this.tripList.getElement());
+    render(this.tripListItemEdit, this.tripList.element);
     /* для того, что бы не было ошибок, нужно не только вернуть последний элемент массива
     объектов точек маршрута, но и заспредить его(извлечь из массива)*/
-    render(new TripEditPointView(...this.tripPointsModel.getTripPoint().slice(3)), this.tripListItemEdit.getElement());
+    render(new TripEditPointView(...this.tripPointsModel.getTripPoint().slice(3)), this.tripListItemEdit.element);
 
     for(let i = 0; i < 3; i++){
       /* Добавляем в список точек маршрута tripList элемент списка <li>*/
-      render(this.tripListItemPoint, this.tripList.getElement());
+      render(this.tripListItemPoint, this.tripList.element);
       /* Добавляем в элемент списка <li> экземпляр класса точка маршрута(TripPointView)
         который в конструктор принимает элемент из массива моковых данных
       */
-      render(new TripPointView({tripPoint: this.tripPoints[i]}), this.tripListItemPoint.getElement());
+      render(new TripPointView({tripPoint: this.tripPoints[i]}), this.tripListItemPoint.element);
     }
   }
 }

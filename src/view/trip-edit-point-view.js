@@ -1,5 +1,5 @@
 import { POINT_TYPE, DESTINATIONS } from '../const';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createEventTypeItem(currentType) {
   return POINT_TYPE.map((typeItem) => `
@@ -114,25 +114,14 @@ function createTripEditPointView(editTripPoints) {
   `;
 }
 
-export default class TripEditPointView {
+export default class TripEditPointView extends AbstractView {
 
   constructor (editTripPoints) {
+    super();
     this.editTripPoints = editTripPoints;
   }
 
-  getTemplate() {
+  get template() {
     return createTripEditPointView(this.editTripPoints);
-  }
-
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

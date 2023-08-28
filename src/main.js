@@ -1,4 +1,4 @@
-import {render} from './render.js';
+import { render } from './framework/render.js';
 import TripMainInfo from './view/trip-main-info-view.js';
 import TripMainControl from './view/trip-main-control-view.js';
 import NewPointButton from './view/trip-main-new-point-button-view.js';
