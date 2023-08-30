@@ -68,17 +68,18 @@ function createTripPointView(tripPoint) {
 
 export default class TripPointView extends AbstractView {
 
+  #tripPoint = null;
   /* Делаем возможным принимать на вход объект со свойством, хранящим в себе объект
     моковых данных
    */
   constructor ({tripPoint}){
     super();
     /* Записываем объект моковых данных точки маршрута в свойство  */
-    this.tripPoint = tripPoint;
+    this.#tripPoint = tripPoint;
   }
 
   get template() {
     /* Передаем в функцию создания шаблона объект моковых данных */
-    return createTripPointView(this.tripPoint);
+    return createTripPointView(this.#tripPoint);
   }
 }
