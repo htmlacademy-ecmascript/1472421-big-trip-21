@@ -6,7 +6,6 @@ import TripListPresenter from './presenter/presenter-trip-list.js';
 import TripPointsModel from './models/model-trip-point.js';
 import TripSortForm from './view/trip-sort-form-view.js';
 import TripList from './view/trip-list-view.js';
-import TripListItem from './view/trip-item-view.js';
 
 
 const tripMain = document.querySelector('.trip-main');
@@ -17,8 +16,6 @@ const newPointButton = new NewPointButton();
 
 const tripSortForm = new TripSortForm();
 const tripList = new TripList();
-const tripListItemEdit = new TripListItem();
-const tripListItemPoint = new TripListItem();
 
 
 /* Создаем экземпляр класса TripPointModel, который может вернуть с помощью метода getTripPoint()
@@ -33,8 +30,6 @@ const tripListPresenter = new TripListPresenter({
   tripPointsModel,
   tripSortForm,
   tripList,
-  tripListItemEdit,
-  tripListItemPoint
 });
 
 render(tripMainInfo, tripMain);
