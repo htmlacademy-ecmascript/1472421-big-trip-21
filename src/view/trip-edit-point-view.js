@@ -120,14 +120,18 @@ export default class TripEditPointView extends AbstractView {
 
   #editTripPoint = null;
   #handleSubmitClick = null;
+  #handleArrowClick = null;
 
-  constructor ({editTripPoint, onSubmitClick}) {
+  constructor ({editTripPoint, onSubmitClick, onArrowClick}) {
     super();
     this.#editTripPoint = editTripPoint;
     this.#handleSubmitClick = onSubmitClick;
+    this.#handleArrowClick = onArrowClick;
 
     this.element.querySelector('form')
       .addEventListener('submit', this.#submitClickHandler);
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#arrowClickHandler);
   }
 
   get template() {
@@ -137,5 +141,10 @@ export default class TripEditPointView extends AbstractView {
   #submitClickHandler = (event) => {
     event.preventDefault();
     this.#handleSubmitClick();
+  };
+
+  #arrowClickHandler = (event) => {
+    event.preventDefault();
+    this.#handleArrowClick();
   };
 }

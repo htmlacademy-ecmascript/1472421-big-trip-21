@@ -22,6 +22,15 @@ export default class tripListPresenter{
   }
 
   #renderPoint(tripPointData) {
+
+    /* Функция, выполняющаяся после нажатия esc в форме редактирования */
+    const escKeyDownHandler = (event) => {
+      if(event.key === 'Escape'){
+        event.preventDefault();
+        replaceEditPointToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
     /* создаем экземпляр view точки маршрута, записывая туда объект с данными о точке маршрута из модели и функцию,
     описывающую действия по клику на элемент точки маршрута "стрелка вниз" */
     const tripPoint = new TripPointView({
@@ -29,6 +38,7 @@ export default class tripListPresenter{
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onEditClick: () => {
         replacePointToEditPoint();
+        document.addEventListener('keydown', escKeyDownHandler);
       }
     });
 
@@ -37,6 +47,11 @@ export default class tripListPresenter{
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onSubmitClick: () => {
         replaceEditPointToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onArrowClick: () => {
+        replaceEditPointToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
       }
     });
 
@@ -57,7 +72,7 @@ export default class tripListPresenter{
 
   init() {
     /* Создаем свойство, в котором будет храниться копия массива моковох данных точек маршрута*/
-    this.#tripPoints = [...this.#tripPointsModel.getTripPoint()].slice(0,3);
+    this.#tripPoints = [...this.#tripPointsModel.getTripPoint()];
 
     render(this.#tripSortForm, this.#tripEventsContainer);
 
@@ -66,7 +81,7 @@ export default class tripListPresenter{
     объектов точек маршрута, но и заспредить его(извлечь из массива)*/
     /* render(new TripEditPointView(...this.#tripPointsModel.getTripPoint().slice(3)), this.#tripListItemEdit.element); */
 
-    for(let i = 0; i < 3; i++){
+    for(let i = 0; i < 4; i++){
       this.#renderPoint(this.#tripPoints[i]);
     }
   }
