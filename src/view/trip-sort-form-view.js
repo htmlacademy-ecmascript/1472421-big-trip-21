@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createTripSortForm(){
   return `
@@ -33,20 +33,13 @@ function createTripSortForm(){
 
 
 /* Компонент, отвечающий за форму сортировки путешествий*/
-export default class TripSortForm {
-  getTemplate() {
+export default class TripSortForm extends AbstractView {
+
+  constructor(){
+    super();
+  }
+
+  get template() {
     return createTripSortForm();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

@@ -6,7 +6,7 @@ const DESTINATIONS_PHOTOS = ['img/photos/1.jpg', 'img/photos/2.jpg', 'img/photos
   где ключ - тип точки маршрута
   значение - ссылка на иконку, соответствующую этому типу,
   и возвращает его */
-const getpointTypeIcon = () => {
+const getPointTypeIcon = () => {
   const pointTypeIcon = new Map;
 
   POINT_TYPE.forEach((item) =>
@@ -17,13 +17,13 @@ const getpointTypeIcon = () => {
 };
 
 const getDiscription = () => {
-  const discription = new Map;
+  const description = new Map;
 
-  discription.set('Chamonix', 'Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy.');
-  discription.set('Amsterdam', 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, quaerat!');
-  discription.set('Geneva', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quae explicabo quia voluptatem eius!');
+  description.set('Chamonix', 'Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy.');
+  description.set('Amsterdam', 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, quaerat!');
+  description.set('Geneva', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quae explicabo quia voluptatem eius!');
 
-  return discription;
+  return description;
 };
 
 const getOffers = () => {
@@ -39,6 +39,6 @@ const getOffers = () => {
 
 const OFFERS = getOffers();
 const DISCRIPTIONS = getDiscription();
-const POINT_TYPE_ICON = getpointTypeIcon();
+const POINT_TYPE_ICON = getPointTypeIcon();
 
 export {DISCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE};

@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 function createTripMainInfo() {
@@ -17,20 +17,13 @@ function createTripMainInfo() {
 }
 
 /* Компонент, отвечающий за раздел информации о путешествии в блоке trip-main */
-export default class TripMainInfo {
-  getTemplate() {
+export default class TripMainInfo extends AbstractView {
+
+  constructor(){
+    super();
+  }
+
+  get template() {
     return createTripMainInfo();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

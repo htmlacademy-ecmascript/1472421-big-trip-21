@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 function createNewPointButton() {
@@ -8,20 +8,13 @@ function createNewPointButton() {
 }
 
 /* Компонент, отвечающий за раздел информации о путешествии в блоке trip-main */
-export default class NewPointButton {
-  getTemplate() {
+export default class NewPointButton extends AbstractView {
+
+  constructor(){
+    super();
+  }
+
+  get template() {
     return createNewPointButton();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

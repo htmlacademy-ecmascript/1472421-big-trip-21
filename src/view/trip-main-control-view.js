@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 function createTripMainControl() {
@@ -35,20 +35,13 @@ function createTripMainControl() {
 }
 
 /* Компонент, отвечающий за раздел фильтров в блоке trip-main */
-export default class TripMainControl {
-  getTemplate() {
+export default class TripMainControl extends AbstractView {
+
+  constructor(){
+    super();
+  }
+
+  get template() {
     return createTripMainControl();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
