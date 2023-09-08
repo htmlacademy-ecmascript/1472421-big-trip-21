@@ -42,6 +42,7 @@ const TimeFilter = {
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
+  EVERYTHING: 'everything',
 };
 
 const OFFERS = getOffers();
