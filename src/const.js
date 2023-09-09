@@ -37,8 +37,16 @@ const getOffers = () => {
 
 };
 
+/* Объект-перечисление(начинается с большой буквы + CamelCase) содержит названия типов фильтрации по времени точек маршрута*/
+const TimeFilter = {
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+  EVERYTHING: 'everything',
+};
+
 const OFFERS = getOffers();
 const DISCRIPTIONS = getDiscription();
 const POINT_TYPE_ICON = getPointTypeIcon();
 
-export {DISCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE};
+export {DISCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter};

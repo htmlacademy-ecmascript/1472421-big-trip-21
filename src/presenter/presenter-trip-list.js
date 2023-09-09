@@ -1,5 +1,6 @@
 import { render, replace } from '../framework/render.js';
 import TripEditPointView from '../view/trip-edit-point-view.js';
+import NoPointView from '../view/trip-no-point-view.js';
 import TripPointView from '../view/trip-point-view.js';
 
 
@@ -70,19 +71,31 @@ export default class tripListPresenter{
     render(tripPoint, this.#tripList.element);
   }
 
-  init() {
-    /* Создаем свойство, в котором будет храниться копия массива моковох данных точек маршрута*/
-    this.#tripPoints = [...this.#tripPointsModel.getTripPoint()];
+  /* Метод отрисовывает весь список точек с кнопками сортировки */
+  #renderPointList() {
 
     render(this.#tripSortForm, this.#tripEventsContainer);
 
     render(this.#tripList, this.#tripEventsContainer);
+
     /* для того, что бы не было ошибок, нужно не только вернуть последний элемент массива
     объектов точек маршрута, но и заспредить его(извлечь из массива)*/
     /* render(new TripEditPointView(...this.#tripPointsModel.getTripPoint().slice(3)), this.#tripListItemEdit.element); */
 
+    if(this.#tripPoints.every((point) => point.isArchive)) {
+      render(new NoPointView(), this.#tripList.element);
+    }
+
     for(let i = 0; i < 4; i++){
       this.#renderPoint(this.#tripPoints[i]);
     }
+
+  }
+
+  init() {
+    /* Создаем свойство, в котором будет храниться копия массива моковох данных точек маршрута*/
+    this.#tripPoints = [...this.#tripPointsModel.getTripPoint()];
+
+    this.#renderPointList();
   }
 }
