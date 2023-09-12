@@ -1,6 +1,6 @@
 import TripEditPointView from '../view/trip-edit-point-view';
 import TripPointView from '../view/trip-point-view';
-import { replace, render } from '../framework/render';
+import { replace, render, remove } from '../framework/render';
 
 export default class TripPointPresenter {
 
@@ -53,6 +53,14 @@ export default class TripPointPresenter {
     if(this.#tripList.contains(prevEditPoint.element)){
       replace(this.#editPoint, prevEditPoint);
     }
+
+    remove(prevPoint);
+    remove(prevEditPoint);
+  }
+
+  destroy() {
+    remove(this.#point);
+    remove(this.#editPoint);
   }
 
   #handleEditClick = () => {

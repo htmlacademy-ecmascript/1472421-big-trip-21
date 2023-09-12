@@ -1,6 +1,7 @@
 import { getRandomArrayElement, getRandomInt, generateId } from '../utils/common';
 import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE, POINT_TYPE_ICON } from '../const';
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 
 
 /* Генерирует случайный пункт назначения */
@@ -36,7 +37,7 @@ function generateTripPoint() {
   const generatedDate = generateDate();
 
   return {
-    id: generateId(),
+    id: nanoid(),
     basePrice: getRandomInt(300, 800),
     dateFrom: generatedDate,
     dateTo: dayjs(generatedDate).add(getRandomInt(2, 5), 'hours'),

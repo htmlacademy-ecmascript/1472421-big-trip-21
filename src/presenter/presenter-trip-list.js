@@ -10,6 +10,7 @@ export default class tripListPresenter{
   #tripSortForm = null;
   #tripList = null;
   #tripPoints = [];
+  #pointsPresenters = new Map;
 
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
@@ -27,6 +28,9 @@ export default class tripListPresenter{
     });
 
     pointPresenter.init(tripPointData);
+    /* При отрисовке каждой ТМ, экземпляр класса презентера ТМ сохраняется в массиве таких экземпляров
+    по id, получаемому из объекта моковых данных */
+    this.#pointsPresenters.set(tripPointData.id, pointPresenter);
   }
 
   #renderNoPoint() {
