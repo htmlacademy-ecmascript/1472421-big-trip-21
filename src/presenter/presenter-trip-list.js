@@ -1,7 +1,6 @@
-import { render, replace } from '../framework/render.js';
-import TripEditPointView from '../view/trip-edit-point-view.js';
+import { render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
-import TripPointView from '../view/trip-point-view.js';
+import TripPointPresenter from './presenter-trip-point.js';
 
 
 export default class tripListPresenter{
@@ -23,52 +22,11 @@ export default class tripListPresenter{
   }
 
   #renderPoint(tripPointData) {
-
-    /* Функция, выполняющаяся после нажатия esc в форме редактирования */
-    const escKeyDownHandler = (event) => {
-      if(event.key === 'Escape'){
-        event.preventDefault();
-        replaceEditPointToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    /* создаем экземпляр view точки маршрута, записывая туда объект с данными о точке маршрута из модели и функцию,
-    описывающую действия по клику на элемент точки маршрута "стрелка вниз" */
-    const tripPoint = new TripPointView({
-      tripPoint: tripPointData,
-      /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
-      onEditClick: () => {
-        replacePointToEditPoint();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const pointPresenter = new TripPointPresenter({
+      tripList: this.#tripList
     });
 
-    const tripEditPoint = new TripEditPointView({
-      editTripPoint: tripPointData,
-      /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
-      onSubmitClick: () => {
-        replaceEditPointToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onArrowClick: () => {
-        replaceEditPointToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    /*функции заменяющие точку маршрута на редактирование точки маршрута и наоборот в DOM-дереве */
-    function replacePointToEditPoint(){
-      replace(tripEditPoint, tripPoint);
-    }
-
-    function replaceEditPointToPoint(){
-      replace(tripPoint, tripEditPoint);
-    }
-
-    /* Добавляем в элемент списка <li> экземпляр класса точка маршрута(TripPointView)
-      который в конструктор принимает элемент из массива моковых данных точек маршрута
-    */
-    render(tripPoint, this.#tripList.element);
+    pointPresenter.init(tripPointData);
   }
 
   #renderNoPoint() {
