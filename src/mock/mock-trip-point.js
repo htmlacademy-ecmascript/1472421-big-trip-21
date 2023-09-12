@@ -44,7 +44,6 @@ function generateTripPoint() {
     isFavorite: Boolean(getRandomInt(0, 1)),
     typeIcon: POINT_TYPE_ICON.get(tripType),
     offers: OFFERS.get(tripType),
-    isArchive: false,
     tripType,
   };
 }

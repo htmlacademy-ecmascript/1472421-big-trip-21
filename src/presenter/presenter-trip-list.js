@@ -71,19 +71,27 @@ export default class tripListPresenter{
     render(tripPoint, this.#tripList.element);
   }
 
+  #renderNoPoint() {
+    render(new NoPointView(), this.#tripList.element);
+  }
+
+  #renderTripSortForm() {
+    render(this.#tripSortForm, this.#tripEventsContainer);
+  }
+
+  #renderTripList(){
+    render(this.#tripList, this.#tripEventsContainer);
+  }
+
   /* Метод отрисовывает весь список точек с кнопками сортировки */
   #renderPointList() {
 
-    render(this.#tripSortForm, this.#tripEventsContainer);
+    this.#renderTripSortForm();
 
-    render(this.#tripList, this.#tripEventsContainer);
+    this.#renderTripList();
 
-    /* для того, что бы не было ошибок, нужно не только вернуть последний элемент массива
-    объектов точек маршрута, но и заспредить его(извлечь из массива)*/
-    /* render(new TripEditPointView(...this.#tripPointsModel.getTripPoint().slice(3)), this.#tripListItemEdit.element); */
-
-    if(this.#tripPoints.every((point) => point.isArchive)) {
-      render(new NoPointView(), this.#tripList.element);
+    if(this.#tripPoints.length === 0) {
+      this.#renderNoPoint();
     }
 
     for(let i = 0; i < 4; i++){
