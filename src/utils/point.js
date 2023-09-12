@@ -12,13 +12,13 @@ function isPointExpired(dateTo){
 /* Функция, определяющая актуальна ли точка, если дата начала меньше или равна текущей дате и дата окончания больше или
   равна текущей дате- вернет true(то есть точка еще актуальна)
 */
-function isActual(dateFrom, dateTo){
+function isPointActual(dateFrom, dateTo){
   return dateTo && (dayjs().isSame(dateFrom, 'minute') || dayjs().isAfter(dateFrom, 'minute')) && (dayjs().isSame(dateTo, 'minute') || dayjs().isBefore(dateTo, 'minute'));
 }
 
 /* Функция проверяет является ли дата начала точки позже текущей даты, если это так - вернет true */
-function isFuter(dateFrom){
+function isPointFuter(dateFrom){
   return dateFrom && dayjs().isBefore(dateFrom, 'minute');
 }
 
-export {isPointExpired, isActual, isFuter};
+export {isPointExpired, isPointActual, isPointFuter};
