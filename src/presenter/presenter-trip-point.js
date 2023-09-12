@@ -17,6 +17,11 @@ export default class TripPointPresenter {
 
     this.#tripPointData = tripPointData;
 
+    /* Переменные, содержащие в себе свойства #point и #editPoint до переопределения, для проведения проверки
+    при переотрисовке точки маршрута */
+    const prevPoint = this.#point;
+    const prevEditPoint = this.#editPoint;
+
     /* создаем экземпляр view точки маршрута, записывая туда объект с данными о точке маршрута из модели и функцию,
     описывающую действия по клику на элемент точки маршрута "стрелка вниз" */
     this.#point = new TripPointView({
@@ -32,7 +37,22 @@ export default class TripPointPresenter {
       onArrowClick: this.#handleSubmitClick
     });
 
-    render(this.#point, this.#tripList.element);
+    /* При отрисовке(вызове метода init) данный блок проверит, были ли раньше отрисованы ТМ или РТМ,
+    если нет - отрисует ТМ в списке точек маршрута и закончит выполнение метода командой return */
+    if(prevPoint === null || prevEditPoint === null){
+      render(this.#point, this.#tripList.element);
+      return;
+    }
+
+    /*Данные блоки при не первом вызове init() проверят содержатся ли в списке точек точки, созданные придыдущим вызовом метода init()
+    и если в списке они есть, вызовится фун-я replace, заменяющая старую ТМ(РТМ) на новую, созданную текущим вызовом метода init() */
+    if(this.#tripList.contains(prevPoint.element)){
+      replace(this.#point, prevPoint);
+    }
+
+    if(this.#tripList.contains(prevEditPoint.element)){
+      replace(this.#editPoint, prevEditPoint);
+    }
   }
 
   #handleEditClick = () => {
