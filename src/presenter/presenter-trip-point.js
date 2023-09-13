@@ -8,9 +8,11 @@ export default class TripPointPresenter {
   #tripPointData = null;
   #point = null;
   #editPoint = null;
+  #handleDataChange = null;
 
-  constructor({tripList}) {
+  constructor({tripList, onDataChange}) {
     this.#tripList = tripList;
+    this.#handleDataChange = onDataChange;
   }
 
   init(tripPointData) {
@@ -27,7 +29,8 @@ export default class TripPointPresenter {
     this.#point = new TripPointView({
       tripPoint: this.#tripPointData,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
-      onEditClick: this.#handleEditClick
+      onEditClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#editPoint = new TripEditPointView({
@@ -46,11 +49,11 @@ export default class TripPointPresenter {
 
     /*Данные блоки при не первом вызове init() проверят содержатся ли в списке точек точки, созданные придыдущим вызовом метода init()
     и если в списке они есть, вызовится фун-я replace, заменяющая старую ТМ(РТМ) на новую, созданную текущим вызовом метода init() */
-    if(this.#tripList.contains(prevPoint.element)){
+    if(this.#tripList.element.contains(prevPoint.element)){
       replace(this.#point, prevPoint);
     }
 
-    if(this.#tripList.contains(prevEditPoint.element)){
+    if(this.#tripList.element.contains(prevEditPoint.element)){
       replace(this.#editPoint, prevEditPoint);
     }
 
@@ -70,6 +73,14 @@ export default class TripPointPresenter {
   #handleSubmitClick = () => {
     this.#replaceEditPointToPoint();
   };
+
+  /* метод, срабатывающий при клике на звездочку и вызывающий метод, обрабатывающий изменения,
+  которой на вход примет объект, на котором сработал клик и заменить там значение поля issFavorite */
+  #handleFavoriteClick = () => {
+    /* оператор (...) нужен потому, что tripPointData по сути массив из одного элемента
+     */
+    this.#handleDataChange({...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite});
+  }
 
   #escKeyDownHandler = (event) => {
     if(event.key === 'Escape'){

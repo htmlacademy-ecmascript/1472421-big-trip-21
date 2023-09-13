@@ -72,17 +72,22 @@ export default class TripPointView extends AbstractView {
 
   #tripPoint = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;
   /* Делаем возможным принимать на вход объект со свойством, хранящим в себе объект
     моковых данных
    */
-  constructor ({tripPoint, onEditClick}){
+  constructor ({tripPoint, onEditClick, onFavoriteClick}){
     super();
     /* Записываем объект моковых данных точки маршрута в свойство  */
     this.#tripPoint = tripPoint;
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
+    /* По клику на кнопку favorite вызовится обработчик события */
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -94,4 +99,9 @@ export default class TripPointView extends AbstractView {
     event.preventDefault();
     this.#handleEditClick();
   };
+
+  #favoriteClickHandler = (event) => {
+    event.preventDefault();
+    this.#handleFavoriteClick();
+  }
 }

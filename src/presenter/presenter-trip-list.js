@@ -1,6 +1,7 @@
 import { render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
+import { updateItem } from '../utils/common.js';
 
 
 export default class tripListPresenter{
@@ -24,7 +25,8 @@ export default class tripListPresenter{
 
   #renderPoint(tripPointData) {
     const pointPresenter = new TripPointPresenter({
-      tripList: this.#tripList
+      tripList: this.#tripList,
+      onDataChange: this.#hendleDataChange
     });
 
     pointPresenter.init(tripPointData);
@@ -45,6 +47,15 @@ export default class tripListPresenter{
     render(this.#tripList, this.#tripEventsContainer);
   }
 
+  /* Метод для обновления ТМ */
+  #hendleDataChange = (updatedPoint) => {
+    /*функция при обновлении ТМ проверяет какая ТМ из массива ТМ обновилась, заменяется
+    в массиве ТМ на обновленную и возвращает массив ТМ с обновленной ТМ */
+    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    /* В списке всех экземпляров презентера ТМ по id находим презентер с ТМ, которая обновилась
+    запускаем у презентера метод init, передаем в метод обновленные данные ТМ*/
+    this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
+  }
   /* Метод отрисовывает весь список точек с кнопками сортировки */
   #renderPointList() {
 
@@ -60,6 +71,12 @@ export default class tripListPresenter{
       this.#renderPoint(this.#tripPoints[i]);
     }
 
+  }
+
+  /* Метод для очистки списка ТМ */
+  #clearPointlist() {
+    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenters.clear();
   }
 
   init() {

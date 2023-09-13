@@ -11,4 +11,8 @@ function generateId() {
   return Math.floor(Math.random() * 3);
 }
 
-export {getRandomArrayElement, getRandomInt, generateId};
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export {getRandomArrayElement, getRandomInt, generateId, updateItem};
