@@ -1,6 +1,7 @@
 import TripEditPointView from '../view/trip-edit-point-view';
 import TripPointView from '../view/trip-point-view';
 import { replace, render, remove } from '../framework/render';
+import { Mode } from '../const';
 
 export default class TripPointPresenter {
 
@@ -9,10 +10,13 @@ export default class TripPointPresenter {
   #point = null;
   #editPoint = null;
   #handleDataChange = null;
+  #mode = Mode.DEFAULT;
+  #handleModeChange = null;
 
-  constructor({tripList, onDataChange}) {
+  constructor({tripList, onDataChange, onModeChange}) {
     this.#tripList = tripList;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(tripPointData) {
@@ -49,11 +53,11 @@ export default class TripPointPresenter {
 
     /*Данные блоки при не первом вызове init() проверят содержатся ли в списке точек точки, созданные придыдущим вызовом метода init()
     и если в списке они есть, вызовится фун-я replace, заменяющая старую ТМ(РТМ) на новую, созданную текущим вызовом метода init() */
-    if(this.#tripList.element.contains(prevPoint.element)){
+    if(this.#mode === Mode.DEFAULT){
       replace(this.#point, prevPoint);
     }
 
-    if(this.#tripList.element.contains(prevEditPoint.element)){
+    if(this.#mode === Mode.EDITING){
       replace(this.#editPoint, prevEditPoint);
     }
 
@@ -71,6 +75,7 @@ export default class TripPointPresenter {
   };
 
   #handleSubmitClick = () => {
+    /* this.#handleDataChange(tripPointData) понадобиться позже*/
     this.#replaceEditPointToPoint();
   };
 
@@ -80,7 +85,7 @@ export default class TripPointPresenter {
     /* оператор (...) нужен потому, что tripPointData по сути массив из одного элемента
      */
     this.#handleDataChange({...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite});
-  }
+  };
 
   #escKeyDownHandler = (event) => {
     if(event.key === 'Escape'){
@@ -92,11 +97,23 @@ export default class TripPointPresenter {
   #replacePointToEditPoint() {
     replace(this.#editPoint, this.#point);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    /* При замене ТМ на РТМ будет вызвана функция, которая у всех презентеров с mode: editting вызовет resetView()
+     */
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceEditPointToPoint() {
     replace(this.#point, this.#editPoint);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  }
+
+  /* Метод, меняющий РТМ на ТМ, если режим ТМ не по умолчанию, то есть если она открыта для редактирования */
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceEditPointToPoint();
+    }
   }
 
 }

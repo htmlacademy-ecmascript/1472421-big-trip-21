@@ -26,7 +26,8 @@ export default class tripListPresenter{
   #renderPoint(tripPointData) {
     const pointPresenter = new TripPointPresenter({
       tripList: this.#tripList,
-      onDataChange: this.#hendleDataChange
+      onDataChange: this.#handleDataChange,
+      onModeChange: this.#handleModeChange
     });
 
     pointPresenter.init(tripPointData);
@@ -48,14 +49,20 @@ export default class tripListPresenter{
   }
 
   /* Метод для обновления ТМ */
-  #hendleDataChange = (updatedPoint) => {
+  #handleDataChange = (updatedPoint) => {
     /*функция при обновлении ТМ проверяет какая ТМ из массива ТМ обновилась, заменяется
     в массиве ТМ на обновленную и возвращает массив ТМ с обновленной ТМ */
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
     /* В списке всех экземпляров презентера ТМ по id находим презентер с ТМ, которая обновилась
     запускаем у презентера метод init, передаем в метод обновленные данные ТМ*/
     this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
-  }
+  };
+
+  /* Метод,  */
+  #handleModeChange = () => {
+    this.#pointsPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   /* Метод отрисовывает весь список точек с кнопками сортировки */
   #renderPointList() {
 
