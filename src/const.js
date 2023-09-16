@@ -46,14 +46,20 @@ const TimeFilter = {
 };
 
 /* Перечисление режимов отображения ТМ */
-
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING'
+};
+
+/* Перечисление типов сортировки */
+const SortType ={
+  DAY: 'day',
+  PRICE: 'price',
+  TIME: 'time'
 };
 
 const OFFERS = getOffers();
 const DISCRIPTIONS = getDiscription();
 const POINT_TYPE_ICON = getPointTypeIcon();
 
-export {DISCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode};
+export {DISCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType};
