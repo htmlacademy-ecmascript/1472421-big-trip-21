@@ -4,7 +4,6 @@ import TripMainFilter from './view/trip-main-filter-view.js';
 import NewPointButton from './view/trip-main-new-point-button-view.js';
 import TripListPresenter from './presenter/presenter-trip-list.js';
 import TripPointsModel from './models/model-trip-point.js';
-import TripSortForm from './view/trip-sort-form-view.js';
 import TripList from './view/trip-list-view.js';
 import { generateMockFilter } from './mock/mock-filter.js';
 
@@ -23,17 +22,14 @@ const tripMainFilter = new TripMainFilter(filterPoints);
 
 
 const newPointButton = new NewPointButton();
-const tripSortForm = new TripSortForm();
 const tripList = new TripList();
 
 
 const tripListPresenter = new TripListPresenter({
   tripEventsContainer:tripEvents,
   /* Помещаем экземпляр  tripPointsModel в конструктор презентера в виде
-  второго свойства объекта, который передается на вход в конструктор
-*/
+  второго свойства объекта, который передается на вход в конструктор*/
   tripPointsModel,
-  tripSortForm,
   tripList,
 });
 

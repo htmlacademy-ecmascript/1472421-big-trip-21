@@ -36,8 +36,25 @@ function createTripSortForm(){
 /* Компонент, отвечающий за форму сортировки путешествий*/
 export default class TripSortForm extends AbstractView {
 
-  constructor(){
+  #handleSortTypeChange = null;
+
+  constructor({onSortTypeChange}){
     super();
+    this.#handleSortTypeChange = onSortTypeChange;
+
+    this.element.addEventListener('click', this.#sortTypeClickHandler)
+  }
+
+  /* Функция, вызываемая при клике на форму сортировки */
+  #sortTypeClickHandler = (event) => {
+    /* если клик был не по элементу <label> то функция завершит работу */
+    if(event.target.tagName !== 'LABEL') {
+      return;
+    }
+
+    event.preventDefault();
+    /* data атрибут будет получен через обращение dataset.sortType (название дата атр. camelCase хотя в шаблоне data-sort-type) */
+    this.#handleSortTypeChange(event.target.dataset.sortType);
   }
 
   get template() {
