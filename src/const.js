@@ -52,7 +52,7 @@ const Mode = {
 };
 
 /* Перечисление типов сортировки */
-const SortType ={
+const SortType = {
   DAY: 'day',
   PRICE: 'price',
   TIME: 'time'

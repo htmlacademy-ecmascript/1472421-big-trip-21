@@ -4,7 +4,7 @@ import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
 import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
-import { sortTypePrice } from '../utils/point.js';
+import { sortTypePrice, sortTypeTime } from '../utils/point.js';
 
 
 export default class tripListPresenter{
@@ -46,7 +46,7 @@ export default class tripListPresenter{
 
   #renderTripSortForm() {
 
-    this.#tripSortForm = new TripSortForm({onSortTypeChange: this.#handleSortTypeChange})
+    this.#tripSortForm = new TripSortForm({onSortTypeChange: this.#handleSortTypeChange});
 
     render(this.#tripSortForm, this.#tripEventsContainer);
   }
@@ -79,9 +79,9 @@ export default class tripListPresenter{
         /* выполнится сортировка массива данных в соответствии с колбекфункцией сортировки */
         this.#tripPoints.sort(sortTypePrice);
         break;
-      /* case SortType.TIME:
-        this.#tripPoints.sort(sortTypeTime)
-        break; */
+      case SortType.TIME:
+        this.#tripPoints.sort(sortTypeTime);
+        break;
       default:
         this.#tripPoints = [...this.#sourcedTripPoints];
     }

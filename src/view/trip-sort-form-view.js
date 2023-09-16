@@ -42,7 +42,7 @@ export default class TripSortForm extends AbstractView {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
 
-    this.element.addEventListener('click', this.#sortTypeClickHandler)
+    this.element.addEventListener('click', this.#sortTypeClickHandler);
   }
 
   /* Функция, вызываемая при клике на форму сортировки */
@@ -55,7 +55,7 @@ export default class TripSortForm extends AbstractView {
     event.preventDefault();
     /* data атрибут будет получен через обращение dataset.sortType (название дата атр. camelCase хотя в шаблоне data-sort-type) */
     this.#handleSortTypeChange(event.target.dataset.sortType);
-  }
+  };
 
   get template() {
     return createTripSortForm();

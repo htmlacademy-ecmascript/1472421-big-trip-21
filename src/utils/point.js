@@ -45,4 +45,18 @@ function sortTypePrice(pointA, pointB) {
   return weight ?? pointB.basePrice - pointA.basePrice;
 }
 
-export {isPointExpired, isPointActual, isPointFuter, sortTypePrice};
+function sortTypeDay(pointA, pointB) {
+  const weight = getWeightForNullValue(pointA.dateFrom, pointB.dateTo);
+
+  return weight ?? pointA.dateFrom.diff(pointB.dateTo);
+}
+
+function sortTypeTime(pointA, pointB) {
+  const weight = getWeightForNullValue(pointA.dateFrom, pointB.dateTo);
+  const durationA = pointA.dateFrom.diff(pointA.dateTo);
+  const durationB = pointB.dateFrom.diff(pointB.dateTo);
+
+  return weight ?? durationA - durationB;
+}
+
+export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime};
