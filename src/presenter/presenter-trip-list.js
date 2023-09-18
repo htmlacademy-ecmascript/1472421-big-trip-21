@@ -1,7 +1,7 @@
-import { render, replace } from '../framework/render.js';
-import TripEditPointView from '../view/trip-edit-point-view.js';
+import { render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
-import TripPointView from '../view/trip-point-view.js';
+import TripPointPresenter from './presenter-trip-point.js';
+import { updateItem } from '../utils/common.js';
 
 
 export default class tripListPresenter{
@@ -11,6 +11,7 @@ export default class tripListPresenter{
   #tripSortForm = null;
   #tripList = null;
   #tripPoints = [];
+  #pointsPresenters = new Map;
 
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
@@ -23,73 +24,66 @@ export default class tripListPresenter{
   }
 
   #renderPoint(tripPointData) {
-
-    /* Функция, выполняющаяся после нажатия esc в форме редактирования */
-    const escKeyDownHandler = (event) => {
-      if(event.key === 'Escape'){
-        event.preventDefault();
-        replaceEditPointToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    /* создаем экземпляр view точки маршрута, записывая туда объект с данными о точке маршрута из модели и функцию,
-    описывающую действия по клику на элемент точки маршрута "стрелка вниз" */
-    const tripPoint = new TripPointView({
-      tripPoint: tripPointData,
-      /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
-      onEditClick: () => {
-        replacePointToEditPoint();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const pointPresenter = new TripPointPresenter({
+      tripList: this.#tripList,
+      onDataChange: this.#handleDataChange,
+      onModeChange: this.#handleModeChange
     });
 
-    const tripEditPoint = new TripEditPointView({
-      editTripPoint: tripPointData,
-      /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
-      onSubmitClick: () => {
-        replaceEditPointToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onArrowClick: () => {
-        replaceEditPointToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    /*функции заменяющие точку маршрута на редактирование точки маршрута и наоборот в DOM-дереве */
-    function replacePointToEditPoint(){
-      replace(tripEditPoint, tripPoint);
-    }
-
-    function replaceEditPointToPoint(){
-      replace(tripPoint, tripEditPoint);
-    }
-
-    /* Добавляем в элемент списка <li> экземпляр класса точка маршрута(TripPointView)
-      который в конструктор принимает элемент из массива моковых данных точек маршрута
-    */
-    render(tripPoint, this.#tripList.element);
+    pointPresenter.init(tripPointData);
+    /* При отрисовке каждой ТМ, экземпляр класса презентера ТМ сохраняется в массиве таких экземпляров
+    по id, получаемому из объекта моковых данных */
+    this.#pointsPresenters.set(tripPointData.id, pointPresenter);
   }
+
+  #renderNoPoint() {
+    render(new NoPointView(), this.#tripList.element);
+  }
+
+  #renderTripSortForm() {
+    render(this.#tripSortForm, this.#tripEventsContainer);
+  }
+
+  #renderTripList(){
+    render(this.#tripList, this.#tripEventsContainer);
+  }
+
+  /* Метод для обновления ТМ */
+  #handleDataChange = (updatedPoint) => {
+    /*функция при обновлении ТМ проверяет какая ТМ из массива ТМ обновилась, заменяется
+    в массиве ТМ на обновленную и возвращает массив ТМ с обновленной ТМ */
+    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    /* В списке всех экземпляров презентера ТМ по id находим презентер с ТМ, которая обновилась
+    запускаем у презентера метод init, передаем в метод обновленные данные ТМ*/
+    this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  /* Метод,  */
+  #handleModeChange = () => {
+    this.#pointsPresenters.forEach((presenter) => presenter.resetView());
+  };
 
   /* Метод отрисовывает весь список точек с кнопками сортировки */
   #renderPointList() {
 
-    render(this.#tripSortForm, this.#tripEventsContainer);
+    this.#renderTripSortForm();
 
-    render(this.#tripList, this.#tripEventsContainer);
+    this.#renderTripList();
 
-    /* для того, что бы не было ошибок, нужно не только вернуть последний элемент массива
-    объектов точек маршрута, но и заспредить его(извлечь из массива)*/
-    /* render(new TripEditPointView(...this.#tripPointsModel.getTripPoint().slice(3)), this.#tripListItemEdit.element); */
-
-    if(this.#tripPoints.every((point) => point.isArchive)) {
-      render(new NoPointView(), this.#tripList.element);
+    if(this.#tripPoints.length === 0) {
+      this.#renderNoPoint();
     }
 
     for(let i = 0; i < 4; i++){
       this.#renderPoint(this.#tripPoints[i]);
     }
 
+  }
+
+  /* Метод для очистки списка ТМ */
+  #clearPointlist() {
+    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenters.clear();
   }
 
   init() {
