@@ -1,5 +1,4 @@
-import { POINT_TYPE, DESTINATIONS } from '../const';
-import dayjs from 'dayjs';
+import { POINT_TYPE, DESTINATIONS, DISCRIPTIONS } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { POINT_TYPE_ICON } from '../const';
 
@@ -40,7 +39,7 @@ function createOffersOptions(offers) {
 
 function createTripEditPointView(editTripPoints) {
 
-  const {tripType, destination, dateFrom, dateTo, basePrice, offers } = editTripPoints;
+  const {tripType, dateFrom, dateTo, basePrice, offers, destinationName } = editTripPoints;
 
   const eventTypeItem = createEventTypeItem(tripType);
 
@@ -71,7 +70,7 @@ function createTripEditPointView(editTripPoints) {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${tripType}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${destinationList}
             </datalist>
@@ -110,7 +109,7 @@ function createTripEditPointView(editTripPoints) {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destination.discription}</p>
+            <p class="event__destination-description">${DISCRIPTIONS.get(destinationName)}</p>
           </section>
         </section>
       </form>
@@ -143,6 +142,8 @@ export default class TripEditPointView extends AbstractStatefulView {
       .addEventListener('click', this.#arrowClickHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('click', this.#typeIconClickHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationInputHandler);
   }
 
   #submitClickHandler = (event) => {
@@ -156,22 +157,36 @@ export default class TripEditPointView extends AbstractStatefulView {
   };
 
   #typeIconClickHandler = (event) => {
+    /* Если клик межну двумя типами списков маршрута - ничего не делать*/
+    if(!event.target.classList.contains('event__type-label')){
+      return;
+    }
+
     event.preventDefault();
     this.updateElement({
       tripType: event.target.dataset.type
     });
-    console.log(event.target.dataset.type)
-  }
+  };
+
+  #destinationInputHandler = (event) => {
+    event.preventDefault();
+    this.updateElement({
+      destinationName: event.target.value
+    });
+  };
 
   /* Делает копию данных о ТМ, что бы вернуть их в приватный метод _setState для установки _state */
   static parsePointToState(point) {
-    return {...point};
-  };
+    return {
+      ...point,
+      destinationName: point.destination['name'],
+    };
+  }
 
   /* Получает на вход свойство _state и копирует данные из него в данные ТМ */
   static parseStateToPoint(state){
     const point = {...state};
 
     return point;
-  };
+  }
 }
