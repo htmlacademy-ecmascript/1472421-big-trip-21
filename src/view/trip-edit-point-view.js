@@ -1,11 +1,13 @@
 import { POINT_TYPE, DESTINATIONS } from '../const';
-import AbstractView from '../framework/view/abstract-view';
+import dayjs from 'dayjs';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import { POINT_TYPE_ICON } from '../const';
 
 function createEventTypeItem(currentType) {
   return POINT_TYPE.map((typeItem) => `
     <div class="event__type-item">
       <input id="event-type-${typeItem.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeItem.toLowerCase()}" ${currentType === typeItem ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${typeItem.toLowerCase()}" for="event-type-${typeItem.toLowerCase()}-1">${typeItem}</label>
+      <label class="event__type-label  event__type-label--${typeItem.toLowerCase()}" for="event-type-${typeItem.toLowerCase()}-1" data-type = ${typeItem}>${typeItem}</label>
     </div>
   `).join('');
 }
@@ -38,7 +40,7 @@ function createOffersOptions(offers) {
 
 function createTripEditPointView(editTripPoints) {
 
-  const {tripType, destination, typeIcon, dateFrom, dateTo, basePrice, offers} = editTripPoints;
+  const {tripType, destination, dateFrom, dateTo, basePrice, offers } = editTripPoints;
 
   const eventTypeItem = createEventTypeItem(tripType);
 
@@ -53,7 +55,7 @@ function createTripEditPointView(editTripPoints) {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="${typeIcon}" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="${POINT_TYPE_ICON.get(tripType)}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -77,10 +79,10 @@ function createTripEditPointView(editTripPoints) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom.format('DD/MM/YY HH:MM')}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo.format('DD/MM/YY HH:MM')}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -116,35 +118,60 @@ function createTripEditPointView(editTripPoints) {
   `;
 }
 
-export default class TripEditPointView extends AbstractView {
+export default class TripEditPointView extends AbstractStatefulView {
 
-  #editTripPoint = null;
   #handleSubmitClick = null;
   #handleArrowClick = null;
 
   constructor ({editTripPoint, onSubmitClick, onArrowClick}) {
     super();
-    this.#editTripPoint = editTripPoint;
+    this._setState(TripEditPointView.parsePointToState(editTripPoint));
     this.#handleSubmitClick = onSubmitClick;
     this.#handleArrowClick = onArrowClick;
 
+    this._restoreHandlers();
+  }
+
+  get template() {
+    return createTripEditPointView(this._state);
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#submitClickHandler);
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#arrowClickHandler);
-  }
-
-  get template() {
-    return createTripEditPointView(this.#editTripPoint);
+    this.element.querySelector('.event__type-group')
+      .addEventListener('click', this.#typeIconClickHandler);
   }
 
   #submitClickHandler = (event) => {
     event.preventDefault();
-    this.#handleSubmitClick();
+    this.#handleSubmitClick(TripEditPointView.parseStateToPoint(this._state));
   };
 
   #arrowClickHandler = (event) => {
     event.preventDefault();
     this.#handleArrowClick();
+  };
+
+  #typeIconClickHandler = (event) => {
+    event.preventDefault();
+    this.updateElement({
+      tripType: event.target.dataset.type
+    });
+    console.log(event.target.dataset.type)
+  }
+
+  /* Делает копию данных о ТМ, что бы вернуть их в приватный метод _setState для установки _state */
+  static parsePointToState(point) {
+    return {...point};
+  };
+
+  /* Получает на вход свойство _state и копирует данные из него в данные ТМ */
+  static parseStateToPoint(state){
+    const point = {...state};
+
+    return point;
   };
 }
