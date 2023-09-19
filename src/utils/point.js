@@ -21,4 +21,42 @@ function isPointFuter(dateFrom){
   return dateFrom && dayjs().isBefore(dateFrom, 'minute');
 }
 
-export {isPointExpired, isPointActual, isPointFuter};
+/* Определение результата ф-ции compare при значение null одного из сравниваемых элементов */
+function getWeightForNullValue(valueA, valueB){
+  if(valueA === null && valueB === null) {
+    return 0;
+  }
+
+  if(valueA === null) {
+    return 1;
+  }
+
+  if(valueB === null){
+    return -1;
+  }
+
+  return null;
+}
+
+/* функция сортировки по стоимости от максимальной к минимальной */
+function sortTypePrice(pointA, pointB) {
+  const weight = getWeightForNullValue(pointA.basePrice, pointB.basePrice);
+
+  return weight ?? pointB.basePrice - pointA.basePrice;
+}
+
+function sortTypeDay(pointA, pointB) {
+  const weight = getWeightForNullValue(pointA.dateFrom, pointB.dateTo);
+
+  return weight ?? pointA.dateFrom.diff(pointB.dateTo);
+}
+
+function sortTypeTime(pointA, pointB) {
+  const weight = getWeightForNullValue(pointA.dateFrom, pointB.dateTo);
+  const durationA = pointA.dateFrom.diff(pointA.dateTo);
+  const durationB = pointB.dateFrom.diff(pointB.dateTo);
+
+  return weight ?? durationA - durationB;
+}
+
+export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime};
