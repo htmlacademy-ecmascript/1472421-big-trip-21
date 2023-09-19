@@ -39,7 +39,7 @@ function createOffersOptions(offers) {
 
 function createTripEditPointView(editTripPoints) {
 
-  const {tripType, dateFrom, dateTo, basePrice, offers, destinationName } = editTripPoints;
+  const {tripType, dateFrom, dateTo, basePrice, offers, destination, } = editTripPoints;
 
   const eventTypeItem = createEventTypeItem(tripType);
 
@@ -70,7 +70,7 @@ function createTripEditPointView(editTripPoints) {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${tripType}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${destinationList}
             </datalist>
@@ -109,7 +109,7 @@ function createTripEditPointView(editTripPoints) {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${DISCRIPTIONS.get(destinationName)}</p>
+            <p class="event__destination-description">${destination.discription}</p>
           </section>
         </section>
       </form>
@@ -164,14 +164,18 @@ export default class TripEditPointView extends AbstractStatefulView {
 
     event.preventDefault();
     this.updateElement({
-      tripType: event.target.dataset.type
+      tripType: event.target.dataset.type,
     });
   };
 
   #destinationInputHandler = (event) => {
     event.preventDefault();
     this.updateElement({
-      destinationName: event.target.value
+      destination: {
+        ...this._state.destination,
+        name: event.target.value,
+        discription: DISCRIPTIONS.get(event.target.value)
+      },
     });
   };
 
@@ -179,7 +183,10 @@ export default class TripEditPointView extends AbstractStatefulView {
   static parsePointToState(point) {
     return {
       ...point,
-      destinationName: point.destination['name'],
+      destination:{
+        ...point.destination,
+        name: point.destination['name'],
+      }
     };
   }
 

@@ -1,4 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
+import { POINT_TYPE_ICON } from '../const';
 
 function createSelectedOffers(offers) {
 
@@ -26,7 +27,7 @@ function createTripPointView(tripPoint) {
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const {offers, tripType, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
+  const {offers, tripType, destination, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
 
   const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
@@ -38,7 +39,7 @@ function createTripPointView(tripPoint) {
       <div class="event">
         <time class="event__date" datetime="2019-03-18">${dateFrom.format('MMM D')}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="${typeIcon}" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="${POINT_TYPE_ICON.get(tripType)}" alt="Event type icon">
         </div>
         <h3 class="event__title">${tripType} ${destination.name}</h3>
         <div class="event__schedule">
