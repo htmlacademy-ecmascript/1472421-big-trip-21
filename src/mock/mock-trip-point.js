@@ -27,7 +27,15 @@ const destinationsMock = new Array(5).fill().map(generateDestinations);
 
 /* Функция генерирует случайную дату, которая может быть прошедшей или будующей по отношению к текущей или текущей */
 function generateDate() {
-  return dayjs().add(getRandomInt(-30, 30), 'hours');
+
+  const dateFrom = new Date;
+  dateFrom.setHours(getRandomInt(-30, 30));
+
+  const dateTo = new Date(dateFrom);
+  dateTo.setHours(dateFrom.getHours() + getRandomInt(2, 5));
+
+  /* Возвращает две даты с разницей в значениях 2-5 часов */
+  return {dateFrom, dateTo};
 
 }
 
@@ -40,8 +48,8 @@ function generateTripPoint() {
   return {
     id: nanoid(),
     basePrice: getRandomInt(300, 800),
-    dateFrom: generatedDate,
-    dateTo: dayjs(generatedDate).add(getRandomInt(2, 5), 'hours'),
+    dateFrom: generatedDate.dateFrom,
+    dateTo: generatedDate.dateTo,
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
     offers: OFFERS.get(tripType),
