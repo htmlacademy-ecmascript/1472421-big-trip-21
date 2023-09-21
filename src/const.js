@@ -30,7 +30,7 @@ const getOffers = () => {
   const offers = new Map;
 
   POINT_TYPE.forEach((item) => {
-    offers.set(item, [{title: 'upgrade', price: 50}, {title: 'upgrade', price: 250}]);
+    offers.set(item, [{title: 'upgrade', price: 50}, {title: `${item}`, price: 250}]);
   });
 
   return offers;

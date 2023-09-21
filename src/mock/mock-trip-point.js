@@ -52,7 +52,6 @@ function generateTripPoint() {
     dateTo: generatedDate.dateTo,
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
-    offers: OFFERS.get(tripType),
     typeIcon: POINT_TYPE_ICON.get('Bus'),
     tripType,
   };

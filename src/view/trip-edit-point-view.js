@@ -1,6 +1,6 @@
 import { POINT_TYPE, DESTINATIONS, DISCRIPTIONS } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { POINT_TYPE_ICON } from '../const';
+import { POINT_TYPE_ICON, OFFERS } from '../const';
 import dayjs from 'dayjs';
 
 function createEventTypeItem(currentType) {
@@ -40,15 +40,14 @@ function createOffersOptions(offers) {
 
 function createTripEditPointView(editTripPoints) {
 
-  const {tripType, dateFrom, dateTo, basePrice, offers, destination, } = editTripPoints;
+  const {tripType, dateFrom, dateTo, basePrice, destination, } = editTripPoints;
 
   const eventTypeItem = createEventTypeItem(tripType);
 
   const destinationList = createDestinationList();
 
-  const offersOption = createOffersOptions(offers);
+  const offersOption = createOffersOptions(OFFERS.get(tripType));
 
-  console.dir(dateFrom)
 
   return `
     <li class="trip-events__item">
