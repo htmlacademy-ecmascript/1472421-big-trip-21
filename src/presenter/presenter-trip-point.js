@@ -75,8 +75,9 @@ export default class TripPointPresenter {
   };
 
   #handleArrowClick = () => {
+    this.#editPoint.reset(this.#tripPointData);
     this.#replaceEditPointToPoint();
-  }
+  };
 
   #handleSubmitClick = (tripPointData) => {
     this.#handleDataChange(tripPointData);
@@ -94,6 +95,7 @@ export default class TripPointPresenter {
   #escKeyDownHandler = (event) => {
     if(event.key === 'Escape'){
       event.preventDefault();
+      this.#editPoint.reset(this.#tripPointData);
       this.#replaceEditPointToPoint();
     }
   };
@@ -116,6 +118,7 @@ export default class TripPointPresenter {
   /* Метод, меняющий РТМ на ТМ, если режим ТМ не по умолчанию, то есть если она открыта для редактирования */
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editPoint.reset(this.#tripPointData);
       this.#replaceEditPointToPoint();
     }
   }

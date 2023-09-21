@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { POINT_TYPE_ICON } from '../const';
+import { POINT_TYPE_ICON, OFFERS } from '../const';
 import dayjs from 'dayjs';
 
 function createSelectedOffers(offers) {
@@ -28,11 +28,11 @@ function createTripPointView(tripPoint) {
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const {offers, tripType, destination, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
+  const { tripType, destination, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
 
   const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  const offersList = createSelectedOffers(offers);
+  const offersList = createSelectedOffers(OFFERS.get(tripType));
 
   /* Вставляем переменные в соответствующие места в шаблоне */
   return `

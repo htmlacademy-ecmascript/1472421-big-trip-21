@@ -198,4 +198,10 @@ export default class TripEditPointView extends AbstractStatefulView {
 
     return point;
   }
+
+  /* Метод, при вызове которого состояние элемента вернется в начальное состояние, в котором было равно данным ТМ до редактирования */
+  reset(point) {
+    /* Метод updateElement, записывает приняты на вход данные в _state и перерисовывает элемент */
+    this.updateElement(TripEditPointView.parsePointToState(point));
+  }
 }

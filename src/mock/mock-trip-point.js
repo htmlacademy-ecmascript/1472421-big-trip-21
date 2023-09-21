@@ -1,6 +1,5 @@
 import { getRandomArrayElement, getRandomInt, generateId } from '../utils/common';
-import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE, POINT_TYPE_ICON } from '../const';
-import dayjs from 'dayjs';
+import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, POINT_TYPE, POINT_TYPE_ICON } from '../const';
 import { nanoid } from 'nanoid';
 
 
