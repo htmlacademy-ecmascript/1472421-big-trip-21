@@ -197,8 +197,7 @@ export default class TripEditPointView extends AbstractStatefulView {
 
         return item;
       })
-    })
-    console.log(this._state)
+    });
   };
 
   /* Делает копию данных о ТМ, что бы вернуть их в приватный метод _setState для установки _state */

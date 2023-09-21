@@ -1,4 +1,4 @@
-import { getRandomInt } from "./utils/common";
+import { getRandomInt } from './utils/common';
 
 const POINT_TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Geneva'];
