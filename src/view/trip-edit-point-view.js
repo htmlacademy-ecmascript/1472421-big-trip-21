@@ -25,8 +25,8 @@ function createOffersOptions(offers) {
   for(let i = 0; i < offers.length; i++){
     offersOption += `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${i === 0 ? 'checked' : ''}>
-        <label class="event__offer-label" for="event-offer-luggage-1">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage"  ${offers[i].isChecked === true ? 'checked' : ''}>
+        <label class="event__offer-label" for="event-offer-luggage-1" data-type-offer = '${offers[i].title}'>
           <span class="event__offer-title">${offers[i].title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offers[i].price}</span>
@@ -40,13 +40,13 @@ function createOffersOptions(offers) {
 
 function createTripEditPointView(editTripPoints) {
 
-  const {tripType, dateFrom, dateTo, basePrice, destination, } = editTripPoints;
+  const {tripType, dateFrom, dateTo, basePrice, destination, offers} = editTripPoints;
 
   const eventTypeItem = createEventTypeItem(tripType);
 
   const destinationList = createDestinationList();
 
-  const offersOption = createOffersOptions(OFFERS.get(tripType));
+  const offersOption = createOffersOptions(offers);
 
 
   return `
@@ -146,6 +146,8 @@ export default class TripEditPointView extends AbstractStatefulView {
       .addEventListener('click', this.#typeIconClickHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationInputHandler);
+    this.element.querySelector('.event__available-offers')
+      .addEventListener('click', this.#offersClickHandler);
   }
 
   #submitClickHandler = (event) => {
@@ -167,6 +169,7 @@ export default class TripEditPointView extends AbstractStatefulView {
     event.preventDefault();
     this.updateElement({
       tripType: event.target.dataset.type,
+      offers: OFFERS.get(event.target.dataset.type)
     });
   };
 
@@ -181,6 +184,23 @@ export default class TripEditPointView extends AbstractStatefulView {
     });
   };
 
+  #offersClickHandler = (event) => {
+    event.preventDefault();
+    this.updateElement({
+      /* обновляет поле offers объекта _state, помещая туда новый массив офферс, созданный на основе старого
+      но с измененным полем isChecked у элемента массива, если поле title элемента массива соответствует дата аттрибуту type-offer элемента, на котором произошло
+      событие 'click' */
+      offers: [...this._state.offers].map((item) => {
+        if(item.title === event.target.dataset.typeOffer){
+          item.isChecked = !item.isChecked;
+        }
+
+        return item;
+      })
+    })
+    console.log(this._state)
+  };
+
   /* Делает копию данных о ТМ, что бы вернуть их в приватный метод _setState для установки _state */
   static parsePointToState(point) {
     return {
@@ -188,7 +208,8 @@ export default class TripEditPointView extends AbstractStatefulView {
       destination:{
         ...point.destination,
         name: point.destination['name'],
-      }
+      },
+      offers: OFFERS.get(point.tripType)
     };
   }
 

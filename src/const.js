@@ -1,3 +1,5 @@
+import { getRandomInt } from "./utils/common";
+
 const POINT_TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Geneva'];
 const DESTINATIONS_PHOTOS = ['img/photos/1.jpg', 'img/photos/2.jpg', 'img/photos/3.jpg'];
@@ -30,7 +32,7 @@ const getOffers = () => {
   const offers = new Map;
 
   POINT_TYPE.forEach((item) => {
-    offers.set(item, [{title: 'upgrade', price: 50}, {title: `${item}`, price: 250}]);
+    offers.set(item, [{title: 'upgrade', price: 50, isChecked: Boolean(getRandomInt(0, 1))}, {title: `${item}`, price: 250, isChecked: Boolean(getRandomInt(0, 1))}]);
   });
 
   return offers;
