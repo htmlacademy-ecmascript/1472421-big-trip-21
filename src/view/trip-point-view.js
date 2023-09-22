@@ -45,9 +45,9 @@ function createTripPointView(tripPoint) {
         <h3 class="event__title">${tripType} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateFrom}">${dayjs(dateFrom).format('HH:MM')}</time>
+            <time class="event__start-time" datetime="${dateFrom}">${dayjs(dateFrom).format('HH:mm')}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateTo}">${dayjs(dateTo).format('HH:MM')}</time>
+            <time class="event__end-time" datetime="${dateTo}">${dayjs(dateTo).format('HH:mm')}</time>
           </p>
           <p class="event__duration">01H 35M</p>
         </div>

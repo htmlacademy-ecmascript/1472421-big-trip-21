@@ -2,6 +2,8 @@ import { POINT_TYPE, DESTINATIONS, DISCRIPTIONS } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { POINT_TYPE_ICON, OFFERS } from '../const';
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createEventTypeItem(currentType) {
   return POINT_TYPE.map((typeItem) => `
@@ -123,6 +125,8 @@ export default class TripEditPointView extends AbstractStatefulView {
 
   #handleSubmitClick = null;
   #handleArrowClick = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor ({editTripPoint, onSubmitClick, onArrowClick}) {
     super();
@@ -148,6 +152,8 @@ export default class TripEditPointView extends AbstractStatefulView {
       .addEventListener('change', this.#destinationInputHandler);
     this.element.querySelector('.event__available-offers')
       .addEventListener('click', this.#offersClickHandler);
+
+    this.#setDatepickers();
   }
 
   #submitClickHandler = (event) => {
@@ -199,6 +205,52 @@ export default class TripEditPointView extends AbstractStatefulView {
       })
     });
   };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate
+    });
+    this.#datepickerTo.set('minDate', this._state.dateFrom);
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate
+    });
+    this.#datepickerFrom.set('maxDate', this._state.dateTo);
+  };
+
+  #setDatepickers() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+        enableTime: true,
+        maxDate: this._state.dateTo,
+        locale: {
+          firstDayOfWeek: 1
+        },
+        'time_24hr': true
+      }
+    );
+
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler,
+        enableTime: true,
+        minDate: this._state.dateFrom,
+        locale: {
+          firstDayOfWeek: 1
+        },
+        'time_24hr': true
+      }
+    );
+  }
 
   /* Делает копию данных о ТМ, что бы вернуть их в приватный метод _setState для установки _state */
   static parsePointToState(point) {
