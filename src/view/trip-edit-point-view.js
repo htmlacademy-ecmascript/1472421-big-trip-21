@@ -28,9 +28,7 @@ function createOffersOptions(offers) {
       <div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage"  ${offers[i].isChecked === true ? 'checked' : ''}>
         <label class="event__offer-label" for="event-offer-luggage-1" data-type-offer = '${offers[i].title}'>
-          <span class="event__offer-title">${offers[i].title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offers[i].price}</span>
+          ${offers[i].title} &plus;&euro;&nbsp; ${offers[i].price}
         </label>
       </div>
     `;
@@ -166,10 +164,21 @@ export default class TripEditPointView extends AbstractStatefulView {
       .addEventListener('click', this.#typeIconClickHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationInputHandler);
-    this.element.querySelector('.event__available-offers')
-      .addEventListener('click', this.#offersClickHandler);
+    this.element.querySelectorAll('.event__offer-selector').forEach((item) => {item.addEventListener('click', this.#offersClickHandler)});
 
     this.#setDatepickers();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom || this.#datepickerTo ) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerTo.destroy();
+
+      this.#datepickerFrom = null;
+      this.#datepickerTo = null;
+    }
   }
 
   #submitClickHandler = (event) => {
@@ -276,7 +285,7 @@ export default class TripEditPointView extends AbstractStatefulView {
         ...point.destination,
         name: point.destination['name'],
       },
-      offers: OFFERS.get(point.tripType)
+      offers: [...point.offers]
     };
   }
 

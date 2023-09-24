@@ -1,5 +1,5 @@
 import { getRandomArrayElement, getRandomInt, generateId } from '../utils/common';
-import { DESTINATIONS, DESCRIPTIONS, DESTINATIONS_PHOTOS, POINT_TYPE,} from '../const';
+import { DESTINATIONS, DESCRIPTIONS, DESTINATIONS_PHOTOS, POINT_TYPE, OFFERS} from '../const';
 import { nanoid } from 'nanoid';
 
 
@@ -55,6 +55,7 @@ function generateTripPoint() {
     dateTo: dateTo,
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
+    offers: OFFERS.get(tripType),
     tripType,
   };
 }
