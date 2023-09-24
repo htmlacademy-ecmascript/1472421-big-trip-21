@@ -164,15 +164,18 @@ export default class TripEditPointView extends AbstractStatefulView {
       .addEventListener('click', this.#typeIconClickHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationInputHandler);
-    this.element.querySelectorAll('.event__offer-selector').forEach((item) => {item.addEventListener('click', this.#offersClickHandler)});
+    this.element.querySelectorAll('.event__offer-selector').forEach((item) => {
+      item.addEventListener('click', this.#offersClickHandler);
+    });
 
     this.#setDatepickers();
   }
 
   removeElement() {
+
     super.removeElement();
 
-    if (this.#datepickerFrom || this.#datepickerTo ) {
+    if (this.#datepickerFrom || this.#datepickerTo) {
       this.#datepickerFrom.destroy();
       this.#datepickerTo.destroy();
 
