@@ -1,5 +1,5 @@
 import { getRandomArrayElement, getRandomInt, generateId } from '../utils/common';
-import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, POINT_TYPE,} from '../const';
+import { DESTINATIONS, DESCRIPTIONS, DESTINATIONS_PHOTOS, POINT_TYPE,} from '../const';
 import { nanoid } from 'nanoid';
 
 
@@ -11,12 +11,16 @@ function generateDestinations() {
   return {
     id: generateId(),
     name,
-    discription: DISCRIPTIONS.get(name),
-    pictures: [
+    discription: DESCRIPTIONS.get(name),
+    photos: [
       {
         src: getRandomArrayElement(DESTINATIONS_PHOTOS),
         discription: 'Any discription'
-      }
+      },
+      {
+        src: getRandomArrayElement(DESTINATIONS_PHOTOS),
+        description: 'Any discription'
+      },
     ]
   };
 }
@@ -42,13 +46,13 @@ function generateDate() {
 function generateTripPoint() {
 
   const tripType = getRandomArrayElement(POINT_TYPE);
-  const generatedDate = generateDate();
+  const {dateFrom, dateTo} = generateDate();
 
   return {
     id: nanoid(),
     basePrice: getRandomInt(300, 800),
-    dateFrom: generatedDate.dateFrom,
-    dateTo: generatedDate.dateTo,
+    dateFrom: dateFrom,
+    dateTo: dateTo,
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
     tripType,

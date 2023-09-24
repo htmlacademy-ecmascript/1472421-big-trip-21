@@ -61,7 +61,7 @@ const SortType = {
 };
 
 const OFFERS = getOffers();
-const DISCRIPTIONS = getDiscription();
+const DESCRIPTIONS = getDiscription();
 const POINT_TYPE_ICON = getPointTypeIcon();
 
-export {DISCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType};
+export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType};

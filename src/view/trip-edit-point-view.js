@@ -1,6 +1,5 @@
-import { POINT_TYPE, DESTINATIONS, DISCRIPTIONS } from '../const';
+import { POINT_TYPE, DESTINATIONS, DESCRIPTIONS, POINT_TYPE_ICON, OFFERS } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { POINT_TYPE_ICON, OFFERS } from '../const';
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -40,15 +39,27 @@ function createOffersOptions(offers) {
   return offersOption;
 }
 
-function createTripEditPointView(editTripPoints) {
+function createDestinationPhotos(photos){
+  let photosList = '';
 
-  const {tripType, dateFrom, dateTo, basePrice, destination, offers} = editTripPoints;
+  for(let i = 0; i < photos.length; i++) {
+    photosList += `<img class="event__photo" src="${photos[i].src}" alt="${photos[i].description}">`;
+  }
+
+  return photosList;
+}
+
+function createTripEditPointView(editTripPoint) {
+
+  const {tripType, dateFrom, dateTo, basePrice, destination, offers} = editTripPoint;
 
   const eventTypeItem = createEventTypeItem(tripType);
 
   const destinationList = createDestinationList();
 
   const offersOption = createOffersOptions(offers);
+
+  const destinationPhotos = createDestinationPhotos(destination.photos);
 
 
   return `
@@ -113,7 +124,12 @@ function createTripEditPointView(editTripPoints) {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destination.discription}</p>
+            <p class="event__destination-description">${destination.description}</p>
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${destinationPhotos}
+              </div>
+            </div>
           </section>
         </section>
       </form>
@@ -185,7 +201,7 @@ export default class TripEditPointView extends AbstractStatefulView {
       destination: {
         ...this._state.destination,
         name: event.target.value,
-        discription: DISCRIPTIONS.get(event.target.value)
+        description: DESCRIPTIONS.get(event.target.value)
       },
     });
   };
@@ -266,9 +282,7 @@ export default class TripEditPointView extends AbstractStatefulView {
 
   /* Получает на вход свойство _state и копирует данные из него в данные ТМ */
   static parseStateToPoint(state){
-    const point = {...state};
-
-    return point;
+    return {...state};
   }
 
   /* Метод, при вызове которого состояние элемента вернется в начальное состояние, в котором было равно данным ТМ до редактирования */
