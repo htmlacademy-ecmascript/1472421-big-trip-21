@@ -1,6 +1,5 @@
 import { getRandomArrayElement, getRandomInt, generateId } from '../utils/common';
-import { DESTINATIONS, DISCRIPTIONS, DESTINATIONS_PHOTOS, OFFERS, POINT_TYPE, POINT_TYPE_ICON } from '../const';
-import dayjs from 'dayjs';
+import { DESTINATIONS, DESCRIPTIONS, DESTINATIONS_PHOTOS, POINT_TYPE, OFFERS} from '../const';
 import { nanoid } from 'nanoid';
 
 
@@ -12,12 +11,16 @@ function generateDestinations() {
   return {
     id: generateId(),
     name,
-    discription: DISCRIPTIONS.get(name),
-    pictures: [
+    discription: DESCRIPTIONS.get(name),
+    photos: [
       {
         src: getRandomArrayElement(DESTINATIONS_PHOTOS),
         discription: 'Any discription'
-      }
+      },
+      {
+        src: getRandomArrayElement(DESTINATIONS_PHOTOS),
+        description: 'Any discription'
+      },
     ]
   };
 }
@@ -27,23 +30,31 @@ const destinationsMock = new Array(5).fill().map(generateDestinations);
 
 /* Функция генерирует случайную дату, которая может быть прошедшей или будующей по отношению к текущей или текущей */
 function generateDate() {
-  return dayjs().add(getRandomInt(-30, 30), 'hours');
+
+  const dateFrom = new Date;
+  dateFrom.setHours(getRandomInt(-30, 30));
+
+  const dateTo = new Date(dateFrom);
+  dateTo.setHours(dateFrom.getHours() + getRandomInt(2, 5));
+
+  /* Возвращает две даты с разницей в значениях 2-5 часов */
+  return {dateFrom, dateTo};
+
 }
 
 /* Генерируем объект точки маршута */
 function generateTripPoint() {
 
   const tripType = getRandomArrayElement(POINT_TYPE);
-  const generatedDate = generateDate();
+  const {dateFrom, dateTo} = generateDate();
 
   return {
     id: nanoid(),
     basePrice: getRandomInt(300, 800),
-    dateFrom: generatedDate,
-    dateTo: dayjs(generatedDate).add(getRandomInt(2, 5), 'hours'),
+    dateFrom: dateFrom,
+    dateTo: dateTo,
     destination: getRandomArrayElement(destinationsMock),
     isFavorite: Boolean(getRandomInt(0, 1)),
-    typeIcon: POINT_TYPE_ICON.get(tripType),
     offers: OFFERS.get(tripType),
     tripType,
   };

@@ -1,4 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
+import { POINT_TYPE_ICON, OFFERS } from '../const';
+import dayjs from 'dayjs';
 
 function createSelectedOffers(offers) {
 
@@ -26,26 +28,26 @@ function createTripPointView(tripPoint) {
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const {offers, tripType, destination, typeIcon, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
+  const { tripType, destination, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
 
   const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  const offersList = createSelectedOffers(offers);
+  const offersList = createSelectedOffers(OFFERS.get(tripType));
 
   /* Вставляем переменные в соответствующие места в шаблоне */
   return `
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${dateFrom.format('MMM D')}</time>
+        <time class="event__date" datetime="2019-03-18">${dayjs(dateFrom).format('MMM D')}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="${typeIcon}" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="${POINT_TYPE_ICON.get(tripType)}" alt="Event type icon">
         </div>
         <h3 class="event__title">${tripType} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateFrom}">${dateFrom.format('HH:MM')}</time>
+            <time class="event__start-time" datetime="${dateFrom}">${dayjs(dateFrom).format('HH:mm')}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateTo}">${dateTo.format('HH:MM')}</time>
+            <time class="event__end-time" datetime="${dateTo}">${dayjs(dateTo).format('HH:mm')}</time>
           </p>
           <p class="event__duration">01H 35M</p>
         </div>

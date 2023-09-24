@@ -6,19 +6,19 @@ import dayjs from 'dayjs';
   если дата окончания уже прошла, то вернет true (значит точка уже прошла по времени)
 */
 function isPointExpired(dateTo){
-  return dateTo && dayjs().isAfter(dateTo, 'milliseconds');
+  return dayjs(dateTo) && dayjs().isAfter(dayjs(dateTo), 'milliseconds');
 }
 
 /* Функция, определяющая актуальна ли точка, если дата начала меньше или равна текущей дате и дата окончания больше или
   равна текущей дате- вернет true(то есть точка еще актуальна)
 */
 function isPointActual(dateFrom, dateTo){
-  return dateTo && (dayjs().isSame(dateFrom, 'minute') || dayjs().isAfter(dateFrom, 'minute')) && (dayjs().isSame(dateTo, 'minute') || dayjs().isBefore(dateTo, 'minute'));
+  return dateTo && (dayjs().isSame(dayjs(dateFrom), 'minute') || dayjs().isAfter(dayjs(dateFrom), 'minute')) && (dayjs().isSame(dayjs(dateTo), 'minute') || dayjs().isBefore(dayjs(dateTo), 'minute'));
 }
 
 /* Функция проверяет является ли дата начала точки позже текущей даты, если это так - вернет true */
 function isPointFuter(dateFrom){
-  return dateFrom && dayjs().isBefore(dateFrom, 'minute');
+  return dayjs(dateFrom) && dayjs().isBefore(dayjs(dateFrom), 'minute');
 }
 
 /* Определение результата ф-ции compare при значение null одного из сравниваемых элементов */
@@ -48,13 +48,13 @@ function sortTypePrice(pointA, pointB) {
 function sortTypeDay(pointA, pointB) {
   const weight = getWeightForNullValue(pointA.dateFrom, pointB.dateTo);
 
-  return weight ?? pointA.dateFrom.diff(pointB.dateTo);
+  return weight ?? dayjs(pointA.dateFrom).diff(dayjs(pointB.dateTo));
 }
 
 function sortTypeTime(pointA, pointB) {
   const weight = getWeightForNullValue(pointA.dateFrom, pointB.dateTo);
-  const durationA = pointA.dateFrom.diff(pointA.dateTo);
-  const durationB = pointB.dateFrom.diff(pointB.dateTo);
+  const durationA = dayjs(pointA.dateFrom).diff(dayjs(pointA.dateTo));
+  const durationB = dayjs(pointB.dateFrom).diff(dayjs(pointB.dateTo));
 
   return weight ?? durationA - durationB;
 }

@@ -41,7 +41,7 @@ export default class TripPointPresenter {
       editTripPoint: this.#tripPointData,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onSubmitClick: this.#handleSubmitClick,
-      onArrowClick: this.#handleSubmitClick
+      onArrowClick: this.#handleArrowClick
     });
 
     /* При отрисовке(вызове метода init) данный блок проверит, были ли раньше отрисованы ТМ или РТМ,
@@ -74,8 +74,13 @@ export default class TripPointPresenter {
     this.#replacePointToEditPoint();
   };
 
-  #handleSubmitClick = () => {
-    /* this.#handleDataChange(tripPointData) понадобиться позже*/
+  #handleArrowClick = () => {
+    this.#editPoint.reset(this.#tripPointData);
+    this.#replaceEditPointToPoint();
+  };
+
+  #handleSubmitClick = (tripPointData) => {
+    this.#handleDataChange(tripPointData);
     this.#replaceEditPointToPoint();
   };
 
@@ -90,6 +95,7 @@ export default class TripPointPresenter {
   #escKeyDownHandler = (event) => {
     if(event.key === 'Escape'){
       event.preventDefault();
+      this.#editPoint.reset(this.#tripPointData);
       this.#replaceEditPointToPoint();
     }
   };
@@ -112,6 +118,7 @@ export default class TripPointPresenter {
   /* Метод, меняющий РТМ на ТМ, если режим ТМ не по умолчанию, то есть если она открыта для редактирования */
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editPoint.reset(this.#tripPointData);
       this.#replaceEditPointToPoint();
     }
   }
