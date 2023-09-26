@@ -11,11 +11,11 @@ function generateDestinations() {
   return {
     id: generateId(),
     name,
-    discription: DESCRIPTIONS.get(name),
+    description: DESCRIPTIONS.get(name),
     photos: [
       {
         src: getRandomArrayElement(DESTINATIONS_PHOTOS),
-        discription: 'Any discription'
+        description: 'Any discription'
       },
       {
         src: getRandomArrayElement(DESTINATIONS_PHOTOS),

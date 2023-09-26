@@ -4,7 +4,7 @@ import { sortTypeDay } from '../utils/point';
 
 const POINT_COUNT = 4;
 
-export default class TripPointsModel {
+export default class TripPointsModel extends Observable {
 
   /* Создает массив из четырех элементов.
      Каждый элемент является моковым объектом точки маршрута.
@@ -13,7 +13,7 @@ export default class TripPointsModel {
   */
   #tripPoints = Array.from({length: POINT_COUNT}, generateTripPoint).sort(sortTypeDay);
 
-  getTripPoint(){
+  get tripPoints(){
     return this.#tripPoints;
   }
 }

@@ -13,10 +13,10 @@ export default class tripListPresenter{
   #tripPointsModel = null;
   #tripSortForm = null;
   #tripList = null;
-  #tripPoints = [];
+
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
-  #sourcedTripPoints = [];
+
 
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
@@ -25,6 +25,19 @@ export default class tripListPresenter{
     this.#tripEventsContainer = tripEventsContainer;
     this.#tripPointsModel = tripPointsModel;
     this.#tripList = tripList;
+  }
+
+  get tripPoints() {
+    switch(this.#currentSortType){
+      /* Если тип сортировки, соответствует сортировки по цене */
+      case SortType.PRICE:
+        /* выполнится сортировка массива данных в соответствии с колбекфункцией сортировки */
+        return [...this.#tripPointsModel.tripPoints].sort(sortTypePrice);
+      case SortType.TIME:
+        return [...this.#tripPointsModel.tripPoints].sort(sortTypeTime);
+      default:
+        return this.#tripPointsModel.tripPoints;
+    }
   }
 
   #renderPoint(tripPointData) {
@@ -57,10 +70,6 @@ export default class tripListPresenter{
 
   /* Метод для обновления ТМ */
   #handleDataChange = (updatedPoint) => {
-    /*функция при обновлении ТМ проверяет какая ТМ из массива ТМ обновилась, заменяется
-    в массиве ТМ на обновленную и возвращает массив ТМ с обновленной ТМ */
-    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints, updatedPoint);
     /* В списке всех экземпляров презентера ТМ по id находим презентер с ТМ, которая обновилась
     запускаем у презентера метод init, передаем в метод обновленные данные ТМ*/
     this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
@@ -71,33 +80,15 @@ export default class tripListPresenter{
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #sortPoint(sortType) {
-
-    switch(sortType){
-      /* Если тип сортировки, соответствует сортировки по цене */
-      case SortType.PRICE:
-        /* выполнится сортировка массива данных в соответствии с колбекфункцией сортировки */
-        this.#tripPoints.sort(sortTypePrice);
-        break;
-      case SortType.TIME:
-        this.#tripPoints.sort(sortTypeTime);
-        break;
-      default:
-        this.#tripPoints = [...this.#sourcedTripPoints];
-    }
-
-    this.#currentSortType = sortType;
-  }
-
   #handleSortTypeChange = (sortType) => {
     if(this.#currentSortType === sortType){
       return;
     }
-    /* Сортируем массив данных в соответствии с заданным параметром сортировки */
-    this.#sortPoint(sortType);
+    /* Меняем текущий тип сортировки*/
+    this.#currentSortType = sortType;
     /* Очищаем ранее отрисованный список ТМ */
     this.#clearPointlist();
-    /* Отрисовываем список заново, при отрисовке данные будут браться из массива tripPoints который уже отсортирован методом sortType */
+    /* Отрисовываем список заново, при отрисовке данные будут браться из массива tripPoints который уже отсортирован при получении */
     this.#renderPointList();
   };
 
@@ -106,12 +97,12 @@ export default class tripListPresenter{
 
     this.#renderTripList();
 
-    if(this.#tripPoints.length === 0) {
+    if(this.tripPoints.length === 0) {
       this.#renderNoPoint();
     }
 
     for(let i = 0; i < 4; i++){
-      this.#renderPoint(this.#tripPoints[i]);
+      this.#renderPoint(this.tripPoints[i]);
     }
 
   }
@@ -123,12 +114,6 @@ export default class tripListPresenter{
   }
 
   init() {
-    /* Создаем свойство, в котором будет храниться копия массива моковох данных точек маршрута*/
-    this.#tripPoints = [...this.#tripPointsModel.getTripPoint()];
-
-    /* Сделаем копию массива моковых данных еще раз, что бы можно было вернуться к начальному состоянию при сортировке */
-    this.#sourcedTripPoints = [...this.#tripPointsModel.getTripPoint()];
-
     this.#renderTripSortForm();
     this.#renderPointList();
   }
