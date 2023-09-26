@@ -2,6 +2,7 @@ import TripEditPointView from '../view/trip-edit-point-view';
 import TripPointView from '../view/trip-point-view';
 import { replace, render, remove } from '../framework/render';
 import { Mode } from '../const';
+import { UserAction, UpdateType } from '../const';
 
 export default class TripPointPresenter {
 
@@ -80,7 +81,7 @@ export default class TripPointPresenter {
   };
 
   #handleSubmitClick = (tripPointData) => {
-    this.#handleDataChange(tripPointData);
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, tripPointData);
     this.#replaceEditPointToPoint();
   };
 
@@ -89,7 +90,11 @@ export default class TripPointPresenter {
   #handleFavoriteClick = () => {
     /* оператор (...) нужен потому, что tripPointData по сути массив из одного элемента
      */
-    this.#handleDataChange({...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite}
+    );
   };
 
   #escKeyDownHandler = (event) => {

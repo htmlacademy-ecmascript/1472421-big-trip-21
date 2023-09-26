@@ -2,8 +2,7 @@ import { render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
-import { updateItem } from '../utils/common.js';
-import { SortType } from '../const.js';
+import { SortType, UpdateType } from '../const.js';
 import { sortTypePrice, sortTypeTime } from '../utils/point.js';
 
 
@@ -43,7 +42,7 @@ export default class tripListPresenter{
   #renderPoint(tripPointData) {
     const pointPresenter = new TripPointPresenter({
       tripList: this.#tripList,
-      onDataChange: this.#handleDataChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
 
@@ -68,11 +67,12 @@ export default class tripListPresenter{
     render(this.#tripList, this.#tripEventsContainer);
   }
 
-  /* Метод для обновления ТМ */
-  #handleDataChange = (updatedPoint) => {
-    /* В списке всех экземпляров презентера ТМ по id находим презентер с ТМ, которая обновилась
-    запускаем у презентера метод init, передаем в метод обновленные данные ТМ*/
-    this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, updateType, update) => {
+
+  }
+
+  #handleModelEvent = (updateType, data) => {
+
   };
 
   /* Метод, который при изменении режима ТМ на редактирование, закрывает все другие формы редактирования*/
