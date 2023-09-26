@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { remove, render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
@@ -12,6 +12,7 @@ export default class tripListPresenter{
   #tripPointsModel = null;
   #tripSortForm = null;
   #tripList = null;
+  #noPointView = null;
 
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
@@ -55,12 +56,15 @@ export default class tripListPresenter{
   }
 
   #renderNoPoint() {
-    render(new NoPointView(), this.#tripList.element);
+
+    this.#noPointView = new NoPointView();
+
+    render(this.#noPointView, this.#tripList.element);
   }
 
   #renderTripSortForm() {
 
-    this.#tripSortForm = new TripSortForm({onSortTypeChange: this.#handleSortTypeChange});
+    this.#tripSortForm = new TripSortForm({currentSortType: this.#currentSortType, onSortTypeChange: this.#handleSortTypeChange});
 
     render(this.#tripSortForm, this.#tripEventsContainer);
   }
@@ -91,8 +95,12 @@ export default class tripListPresenter{
         this.#pointsPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
+        this.#clearPointBoard();
+        this.#renderPointBoard();
         break;
       case UpdateType.MAJOR:
+        this.#clearPointBoard({resetSortType: true});
+        this.#renderPointBoard();
         break;
     }
   };
@@ -109,13 +117,15 @@ export default class tripListPresenter{
     /* Меняем текущий тип сортировки*/
     this.#currentSortType = sortType;
     /* Очищаем ранее отрисованный список ТМ */
-    this.#clearPointlist();
+    this.#clearPointBoard();
     /* Отрисовываем список заново, при отрисовке данные будут браться из массива tripPoints который уже отсортирован при получении */
-    this.#renderPointList();
+    this.#renderPointBoard();
   };
 
   /* Метод отрисовывает весь список точек с кнопками сортировки */
-  #renderPointList() {
+  #renderPointBoard() {
+
+    this.#renderTripSortForm();
 
     this.#renderTripList();
 
@@ -130,13 +140,19 @@ export default class tripListPresenter{
   }
 
   /* Метод для очистки списка ТМ */
-  #clearPointlist() {
+  #clearPointBoard(resetSortType = false) {
+
     this.#pointsPresenters.forEach((presenter) => presenter.destroy());
     this.#pointsPresenters.clear();
+
+    remove(this.#tripSortForm);
+
+    if(resetSortType){
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   init() {
-    this.#renderTripSortForm();
-    this.#renderPointList();
+    this.#renderPointBoard();
   }
 }

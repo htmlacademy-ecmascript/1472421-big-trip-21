@@ -17,7 +17,7 @@ const tripMainInfo = new TripMainInfo();
 const tripPointsModel = new TripPointsModel();
 
 /* заполняем view фильтра данными о количестве точек, попадающих под каждый тип фильтра и типом фильтра */
-const filterPoints = generateMockFilter(tripPointsModel);
+const filterPoints = generateMockFilter(tripPointsModel.tripPoints);
 const tripMainFilter = new TripMainFilter(filterPoints);
 
 
