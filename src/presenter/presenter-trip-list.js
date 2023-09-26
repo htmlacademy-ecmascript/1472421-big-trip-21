@@ -2,7 +2,7 @@ import { render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
-import { SortType, UpdateType } from '../const.js';
+import { SortType, UpdateType, UserAction } from '../const.js';
 import { sortTypePrice, sortTypeTime } from '../utils/point.js';
 
 
@@ -24,6 +24,8 @@ export default class tripListPresenter{
     this.#tripEventsContainer = tripEventsContainer;
     this.#tripPointsModel = tripPointsModel;
     this.#tripList = tripList;
+
+    this.#tripPointsModel.addObserver(this.#handleModelEvent);
   }
 
   get tripPoints() {
@@ -67,12 +69,32 @@ export default class tripListPresenter{
     render(this.#tripList, this.#tripEventsContainer);
   }
 
+  /* При изменеинии, внесенном пользователем, в эту функцию попадут данные о типе изменения
+  действии пользователя и данные состояния */
   #handleViewAction = (actionType, updateType, update) => {
-
+    switch(actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#tripPointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#tripPointsModel.addPoint(updateType, update)
+        break;
+      case UserAction.DELETE_POINT:
+        this.#tripPointsModel.deletePoint(updateType, update)
+        break;
+    }
   }
 
   #handleModelEvent = (updateType, data) => {
-
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointsPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
   };
 
   /* Метод, который при изменении режима ТМ на редактирование, закрывает все другие формы редактирования*/
