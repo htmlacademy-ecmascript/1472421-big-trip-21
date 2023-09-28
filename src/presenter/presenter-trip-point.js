@@ -35,14 +35,15 @@ export default class TripPointPresenter {
       tripPoint: this.#tripPointData,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onEditClick: this.#handleEditClick,
-      onFavoriteClick: this.#handleFavoriteClick
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#editPoint = new TripEditPointView({
       editTripPoint: this.#tripPointData,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onSubmitClick: this.#handleSubmitClick,
-      onArrowClick: this.#handleArrowClick
+      onArrowClick: this.#handleArrowClick,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     /* При отрисовке(вызове метода init) данный блок проверит, были ли раньше отрисованы ТМ или РТМ,
@@ -94,6 +95,14 @@ export default class TripPointPresenter {
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       {...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite}
+    );
+  };
+
+  #handleDeleteClick = (tripPointData) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      tripPointData
     );
   };
 

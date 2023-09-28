@@ -141,12 +141,14 @@ export default class TripEditPointView extends AbstractStatefulView {
   #handleArrowClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #handleDeleteClick = null;
 
-  constructor ({editTripPoint, onSubmitClick, onArrowClick}) {
+  constructor ({editTripPoint, onSubmitClick, onArrowClick, onDeleteClick}) {
     super();
     this._setState(TripEditPointView.parsePointToState(editTripPoint));
     this.#handleSubmitClick = onSubmitClick;
     this.#handleArrowClick = onArrowClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -167,6 +169,8 @@ export default class TripEditPointView extends AbstractStatefulView {
     this.element.querySelectorAll('.event__offer-selector').forEach((item) => {
       item.addEventListener('click', this.#offersClickHandler);
     });
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#deleteClickHandler);
 
     this.#setDatepickers();
   }
@@ -247,6 +251,11 @@ export default class TripEditPointView extends AbstractStatefulView {
     });
     this.#datepickerFrom.set('maxDate', this._state.dateTo);
   };
+
+  #deleteClickHandler = (event) => {
+    event.preventDefault();
+    this.#handleDeleteClick(this._state);
+  }
 
   #setDatepickers() {
     this.#datepickerFrom = flatpickr(

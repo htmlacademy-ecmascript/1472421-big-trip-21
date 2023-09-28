@@ -64,7 +64,11 @@ export default class tripListPresenter{
 
   #renderTripSortForm() {
 
-    this.#tripSortForm = new TripSortForm({currentSortType: this.#currentSortType, onSortTypeChange: this.#handleSortTypeChange});
+    this.#tripSortForm = new TripSortForm({
+      currentSortType: this.#currentSortType,
+      onSortTypeChange: this.#handleSortTypeChange,
+      isPointListClear: this.tripPoints.length === 0 ? true : false
+    });
 
     render(this.#tripSortForm, this.#tripEventsContainer);
   }
@@ -133,7 +137,7 @@ export default class tripListPresenter{
       this.#renderNoPoint();
     }
 
-    for(let i = 0; i < 4; i++){
+    for(let i = 0; i < this.tripPoints.length; i++){
       this.#renderPoint(this.tripPoints[i]);
     }
 
