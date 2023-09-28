@@ -4,6 +4,7 @@ import TripMainFilter from './view/trip-main-filter-view.js';
 import NewPointButton from './view/trip-main-new-point-button-view.js';
 import TripListPresenter from './presenter/presenter-trip-list.js';
 import TripPointsModel from './models/model-trip-point.js';
+import FilterModel from './models/model-filter.js';
 import TripList from './view/trip-list-view.js';
 import { generateMockFilter } from './mock/mock-filter.js';
 
@@ -15,6 +16,8 @@ const tripMainInfo = new TripMainInfo();
 /* Создаем экземпляр класса TripPointModel, который может вернуть с помощью метода getTripPoint()
 массив моковых данных точек маршрута */
 const tripPointsModel = new TripPointsModel();
+
+const filterModel = new FilterModel();
 
 /* заполняем view фильтра данными о количестве точек, попадающих под каждый тип фильтра и типом фильтра */
 const filterPoints = generateMockFilter(tripPointsModel.tripPoints);
