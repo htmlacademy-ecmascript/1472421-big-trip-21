@@ -3,6 +3,7 @@ import TripPointView from '../view/trip-point-view';
 import { replace, render, remove } from '../framework/render';
 import { Mode } from '../const';
 import { UserAction, UpdateType } from '../const';
+import { isDateChange } from '../utils/point';
 
 export default class TripPointPresenter {
 
@@ -81,8 +82,16 @@ export default class TripPointPresenter {
     this.#replaceEditPointToPoint();
   };
 
-  #handleSubmitClick = (tripPointData) => {
-    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, tripPointData);
+  #handleSubmitClick = (updateTripPointData) => {
+    const isMinorUpdateType = !isDateChange(this.#tripPointData, updateTripPointData);
+
+    console.log(isMinorUpdateType)
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdateType ? UpdateType.MINOR : UpdateType.PATCH,
+      updateTripPointData
+    );
     this.#replaceEditPointToPoint();
   };
 

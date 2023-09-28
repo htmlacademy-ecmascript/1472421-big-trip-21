@@ -59,4 +59,8 @@ function sortTypeTime(pointA, pointB) {
   return weight ?? durationA - durationB;
 }
 
-export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime};
+function isDateChange(point, updatePoint) {
+  return dayjs(point.dateFrom).isSame(dayjs(updatePoint.dateFrom)) && dayjs(point.dateTo).isSame(dayjs(updatePoint.dateTo));
+}
+
+export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime, isDateChange};
