@@ -3,6 +3,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 function createEventTypeItem(currentType) {
   return POINT_TYPE.map((typeItem) => `
@@ -83,7 +84,7 @@ function createTripEditPointView(editTripPoint) {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${tripType}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${destinationList}
             </datalist>
