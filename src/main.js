@@ -16,7 +16,7 @@ const tripMainInfo = new TripMainInfo();
 массив моковых данных точек маршрута */
 const tripPointsModel = new TripPointsModel();
 
-const filterModel = new FilterModel();
+const filterPointsModel = new FilterModel();
 
 
 const newPointButton = new NewPointButton();
@@ -28,12 +28,13 @@ const tripListPresenter = new TripListPresenter({
   /* Помещаем экземпляр  tripPointsModel в конструктор презентера в виде
   второго свойства объекта, который передается на вход в конструктор*/
   tripPointsModel,
+  filterPointsModel,
   tripList,
 });
 
 const filterPresenter = new FilterPresenter({
   filterContainer: tripMain,
-  filterModel,
+  filterPointsModel,
   tripPointsModel
 });
 

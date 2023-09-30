@@ -6,18 +6,18 @@ import { TimeFilter, UpdateType } from '../const.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
-  #filterModel = null;
+  #filterPointsModel = null;
   #pointsModel = null;
 
   #filterComponent = null;
 
-  constructor({filterContainer, filterModel, tripPointsModel}) {
+  constructor({filterContainer, filterPointsModel, tripPointsModel}) {
     this.#filterContainer = filterContainer;
-    this.#filterModel = filterModel;
+    this.#filterPointsModel = filterPointsModel;
     this.#pointsModel = tripPointsModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#filterPointsModel.addObserver(this.#handleModelEvent);
   }
 
   get filters() {
@@ -36,7 +36,7 @@ export default class FilterPresenter {
 
     this.#filterComponent = new TripMainFilter({
       filters,
-      currentFilterType: this.#filterModel.filter,
+      currentFilterType: this.#filterPointsModel.filter,
       onFilterTypeChange: this.#handleFilterTypeChange
     });
 
@@ -54,10 +54,10 @@ export default class FilterPresenter {
   };
 
   #handleFilterTypeChange = (filterType) => {
-    if (this.#filterModel.tripPoints === filterType) {
+    if (this.#filterPointsModel.tripPoints === filterType) {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterPointsModel.setFilter(UpdateType.MAJOR, filterType);
   };
 }

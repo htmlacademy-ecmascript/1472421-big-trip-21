@@ -41,10 +41,10 @@ const getOffers = () => {
 
 /* Объект-перечисление(начинается с большой буквы + CamelCase) содержит названия типов фильтрации по времени точек маршрута*/
 const TimeFilter = {
+  EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
-  EVERYTHING: 'everything',
 };
 
 /* Перечисление режимов отображения ТМ */

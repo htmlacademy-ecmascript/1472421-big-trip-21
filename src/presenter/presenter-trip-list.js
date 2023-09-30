@@ -4,6 +4,7 @@ import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
 import { sortTypeDay, sortTypePrice, sortTypeTime } from '../utils/point.js';
+import { filter } from '../utils/filter.js';
 
 
 export default class tripListPresenter{
@@ -13,6 +14,7 @@ export default class tripListPresenter{
   #tripSortForm = null;
   #tripList = null;
   #noPointView = null;
+  #filterPointsModel = null;
 
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
@@ -21,24 +23,32 @@ export default class tripListPresenter{
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
   */
-  constructor({tripEventsContainer, tripPointsModel, tripList }) {
+  constructor({tripEventsContainer, tripPointsModel, tripList, filterPointsModel }) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#tripPointsModel = tripPointsModel;
+    this.#filterPointsModel = filterPointsModel;
     this.#tripList = tripList;
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
+    /* Добавляем подписчика на изменение на изменение модели */
+    this.#filterPointsModel.addObserver(this.#handleModelEvent);
   }
 
   get tripPoints() {
+
+    const filterType = this.#filterPointsModel.filter;
+    const tripPoints = this.#tripPointsModel.tripPoints;
+    const filteredTripPoints = filter[filterType](tripPoints);
+
     switch(this.#currentSortType){
       /* Если тип сортировки, соответствует сортировки по цене */
       case SortType.PRICE:
         /* выполнится сортировка массива данных в соответствии с колбекфункцией сортировки */
-        return [...this.#tripPointsModel.tripPoints].sort(sortTypePrice);
+        return filteredTripPoints.sort(sortTypePrice);
       case SortType.TIME:
-        return [...this.#tripPointsModel.tripPoints].sort(sortTypeTime);
+        return filteredTripPoints.sort(sortTypeTime);
       default:
-        return [...this.#tripPointsModel.tripPoints].sort(sortTypeDay);
+        return filteredTripPoints.sort(sortTypeDay);
     }
   }
 
