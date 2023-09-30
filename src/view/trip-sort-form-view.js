@@ -44,7 +44,7 @@ export default class TripSortForm extends AbstractView {
     super();
     this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
-    this.#isPointListClear = isPointListClear
+    this.#isPointListClear = isPointListClear;
 
     if(!isPointListClear) {
       this.element.addEventListener('click', this.#sortTypeClickHandler);

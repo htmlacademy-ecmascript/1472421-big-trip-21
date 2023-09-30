@@ -3,7 +3,7 @@ import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
-import { sortTypePrice, sortTypeTime } from '../utils/point.js';
+import { sortTypeDay, sortTypePrice, sortTypeTime } from '../utils/point.js';
 
 
 export default class tripListPresenter{
@@ -38,7 +38,7 @@ export default class tripListPresenter{
       case SortType.TIME:
         return [...this.#tripPointsModel.tripPoints].sort(sortTypeTime);
       default:
-        return this.#tripPointsModel.tripPoints;
+        return [...this.#tripPointsModel.tripPoints].sort(sortTypeDay);
     }
   }
 
@@ -67,7 +67,7 @@ export default class tripListPresenter{
     this.#tripSortForm = new TripSortForm({
       currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange,
-      isPointListClear: this.tripPoints.length === 0 ? true : false
+      isPointListClear: this.tripPoints.length === 0
     });
 
     render(this.#tripSortForm, this.#tripEventsContainer);
@@ -85,13 +85,13 @@ export default class tripListPresenter{
         this.#tripPointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
-        this.#tripPointsModel.addPoint(updateType, update)
+        this.#tripPointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
-        this.#tripPointsModel.deletePoint(updateType, update)
+        this.#tripPointsModel.deletePoint(updateType, update);
         break;
     }
-  }
+  };
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {

@@ -85,7 +85,6 @@ export default class TripPointPresenter {
   #handleSubmitClick = (updateTripPointData) => {
     const isMinorUpdateType = !isDateChange(this.#tripPointData, updateTripPointData);
 
-    console.log(isMinorUpdateType)
 
     this.#handleDataChange(
       UserAction.UPDATE_POINT,

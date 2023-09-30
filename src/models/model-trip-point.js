@@ -1,7 +1,5 @@
 import { generateTripPoint } from '../mock/mock-trip-point';
-import { sortTypeDay } from '../utils/point';
-import Observable from '../framework/observable'
-
+import Observable from '../framework/observable';
 
 const POINT_COUNT = 4;
 
@@ -12,7 +10,7 @@ export default class TripPointsModel extends Observable {
      {length:POINT_COUNT} - означает, что мы передаем в .from массивоподнобный объект
      масивоподобный потому, что мы прописываем ему свойство length(длинна)
   */
-  #tripPoints = Array.from({length: POINT_COUNT}, generateTripPoint).sort(sortTypeDay);
+  #tripPoints = Array.from({length: POINT_COUNT}, generateTripPoint);
 
   get tripPoints(){
     return this.#tripPoints;
@@ -46,7 +44,7 @@ export default class TripPointsModel extends Observable {
     this.#tripPoints = [
       update,
       ...this.#tripPoints
-    ]
+    ];
 
     this._notify(updateType, update);
   }

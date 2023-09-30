@@ -255,7 +255,7 @@ export default class TripEditPointView extends AbstractStatefulView {
   #deleteClickHandler = (event) => {
     event.preventDefault();
     this.#handleDeleteClick(this._state);
-  }
+  };
 
   #setDatepickers() {
     this.#datepickerFrom = flatpickr(
