@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import { getRandomInt } from './utils/common';
+import { generateId, getRandomArrayElement } from './utils/common';
 
 const POINT_TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Geneva'];
@@ -83,4 +85,29 @@ const OFFERS = getOffers();
 const DESCRIPTIONS = getDiscription();
 const POINT_TYPE_ICON = getPointTypeIcon();
 
-export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType};
+const BLANK_POINT = {
+  basePrice: 0,
+  dateFrom: dayjs(),
+  dateTo: dayjs(),
+  destination: {
+    id: generateId(),
+    name: 'Chamonix',
+    description: DESCRIPTIONS.get('Chamonix'),
+    photos: [
+      {
+        src: getRandomArrayElement(DESTINATIONS_PHOTOS),
+        description: 'Any discription'
+      },
+      {
+        src: getRandomArrayElement(DESTINATIONS_PHOTOS),
+        description: 'Any discription'
+      },
+    ]
+  },
+  isFavorite: Boolean(getRandomInt(0, 1)),
+  offers: OFFERS.get('Flight'),
+  tripType: 'Flight',
+};
+
+
+export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT};

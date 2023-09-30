@@ -1,4 +1,4 @@
-import { POINT_TYPE, DESTINATIONS, DESCRIPTIONS, POINT_TYPE_ICON, OFFERS } from '../const';
+import { POINT_TYPE, DESTINATIONS, DESCRIPTIONS, POINT_TYPE_ICON, OFFERS, BLANK_POINT } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
@@ -143,7 +143,7 @@ export default class TripEditPointView extends AbstractStatefulView {
   #datepickerTo = null;
   #handleDeleteClick = null;
 
-  constructor ({editTripPoint, onSubmitClick, onArrowClick, onDeleteClick}) {
+  constructor ({editTripPoint = BLANK_POINT, onSubmitClick, onArrowClick, onDeleteClick}) {
     super();
     this._setState(TripEditPointView.parsePointToState(editTripPoint));
     this.#handleSubmitClick = onSubmitClick;

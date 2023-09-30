@@ -19,17 +19,21 @@ const tripPointsModel = new TripPointsModel();
 const filterPointsModel = new FilterModel();
 
 
-const newPointButton = new NewPointButton();
+const newPointButton = new NewPointButton({
+  onClick: handleClickNewPointButton
+});
+
 const tripList = new TripList();
 
 
 const tripListPresenter = new TripListPresenter({
-  tripEventsContainer:tripEvents,
+  boardContainer: tripEvents,
   /* Помещаем экземпляр  tripPointsModel в конструктор презентера в виде
   второго свойства объекта, который передается на вход в конструктор*/
   tripPointsModel,
   filterPointsModel,
   tripList,
+  onNewPointDestroy: handleNewPointFormClose
 });
 
 const filterPresenter = new FilterPresenter({
@@ -37,6 +41,15 @@ const filterPresenter = new FilterPresenter({
   filterPointsModel,
   tripPointsModel
 });
+
+function handleNewPointFormClose() {
+  newPointButton.element.disabled = false;
+}
+
+function handleClickNewPointButton() {
+  tripListPresenter.createPoint();
+  newPointButton.element.disabled = false;
+}
 
 render(tripMainInfo, tripMain);
 filterPresenter.init();

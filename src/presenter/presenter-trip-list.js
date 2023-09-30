@@ -5,16 +5,18 @@ import TripSortForm from '../view/trip-sort-form-view.js';
 import { SortType, UpdateType, UserAction, TimeFilter } from '../const.js';
 import { sortTypeDay, sortTypePrice, sortTypeTime } from '../utils/point.js';
 import { filter } from '../utils/filter.js';
+import NewPointPresenter from './presenter-new-trip-point.js';
 
 
 export default class tripListPresenter{
 
-  #tripEventsContainer = null;
+  #boardContainer = null;
   #tripPointsModel = null;
   #tripSortForm = null;
   #tripList = null;
   #noPointView = null;
   #filterPointsModel = null;
+  #newPointPresenter = null;
 
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
@@ -24,11 +26,18 @@ export default class tripListPresenter{
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
   */
-  constructor({tripEventsContainer, tripPointsModel, tripList, filterPointsModel }) {
-    this.#tripEventsContainer = tripEventsContainer;
+  constructor({boardContainer, tripPointsModel, tripList, filterPointsModel, onNewPointDestroy }) {
+    this.#boardContainer = boardContainer;
     this.#tripPointsModel = tripPointsModel;
     this.#filterPointsModel = filterPointsModel;
     this.#tripList = tripList;
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointsContainer: this.#tripList.element,
+      onDataChange: this.#handleViewAction,
+      onNewPointDestroy,
+    });
+
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
     /* Добавляем подписчика на изменение на изменение модели */
@@ -51,6 +60,12 @@ export default class tripListPresenter{
       default:
         return filteredTripPoints.sort(sortTypeDay);
     }
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterPointsModel.setFilter(UpdateType.MAJOR, TimeFilter.EVERYTHING);
+    this.#newPointPresenter.init();
   }
 
   #renderPoint(tripPointData) {
@@ -83,11 +98,11 @@ export default class tripListPresenter{
       isPointListClear: this.tripPoints.length === 0
     });
 
-    render(this.#tripSortForm, this.#tripEventsContainer);
+    render(this.#tripSortForm, this.#boardContainer);
   }
 
   #renderTripList(){
-    render(this.#tripList, this.#tripEventsContainer);
+    render(this.#tripList, this.#boardContainer);
   }
 
   /* При изменеинии, внесенном пользователем, в эту функцию попадут данные о типе изменения
@@ -124,6 +139,7 @@ export default class tripListPresenter{
 
   /* Метод, который при изменении режима ТМ на редактирование, закрывает все другие формы редактирования*/
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -159,6 +175,7 @@ export default class tripListPresenter{
   /* Метод для очистки списка ТМ */
   #clearPointBoard(resetSortType = false) {
 
+    this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.destroy());
     this.#pointsPresenters.clear();
 
