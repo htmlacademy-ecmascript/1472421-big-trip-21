@@ -2,7 +2,7 @@ import { remove, render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
-import { SortType, UpdateType, UserAction } from '../const.js';
+import { SortType, UpdateType, UserAction, TimeFilter } from '../const.js';
 import { sortTypeDay, sortTypePrice, sortTypeTime } from '../utils/point.js';
 import { filter } from '../utils/filter.js';
 
@@ -18,6 +18,7 @@ export default class tripListPresenter{
 
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
+  #timeFilterType = TimeFilter.EVERYTHING;
 
 
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
@@ -36,9 +37,9 @@ export default class tripListPresenter{
 
   get tripPoints() {
 
-    const filterType = this.#filterPointsModel.filter;
+    this.#timeFilterType = this.#filterPointsModel.filter;
     const tripPoints = this.#tripPointsModel.tripPoints;
-    const filteredTripPoints = filter[filterType](tripPoints);
+    const filteredTripPoints = filter[this.#timeFilterType](tripPoints);
 
     switch(this.#currentSortType){
       /* Если тип сортировки, соответствует сортировки по цене */
@@ -67,7 +68,9 @@ export default class tripListPresenter{
 
   #renderNoPoint() {
 
-    this.#noPointView = new NoPointView();
+    this.#noPointView = new NoPointView({
+      timeFilterType: this.#timeFilterType
+    });
 
     render(this.#noPointView, this.#tripList.element);
   }
@@ -160,6 +163,10 @@ export default class tripListPresenter{
     this.#pointsPresenters.clear();
 
     remove(this.#tripSortForm);
+
+    if(this.#noPointView){
+      remove(this.#noPointView);
+    }
 
     if(resetSortType){
       this.#currentSortType = SortType.DAY;

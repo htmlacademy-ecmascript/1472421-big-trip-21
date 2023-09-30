@@ -72,8 +72,15 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+const NoPointTextType = {
+  [TimeFilter.EVERYTHING] : 'Click New Event to create your first point',
+  [TimeFilter.FUTURE]: 'There are no future events now',
+  [TimeFilter.PAST]: 'There are no past events now',
+  [TimeFilter.PRESENT]: 'There are no present events now'
+};
+
 const OFFERS = getOffers();
 const DESCRIPTIONS = getDiscription();
 const POINT_TYPE_ICON = getPointTypeIcon();
 
-export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction};
+export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType};
