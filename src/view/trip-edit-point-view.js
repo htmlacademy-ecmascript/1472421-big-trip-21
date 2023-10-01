@@ -1,4 +1,4 @@
-import { POINT_TYPE, DESTINATIONS, DESCRIPTIONS, POINT_TYPE_ICON, OFFERS, BLANK_POINT } from '../const';
+import { POINT_TYPE, DESTINATIONS, DESCRIPTIONS, POINT_TYPE_ICON, OFFERS, BLANK_POINT, ONLY_NUMBERS_REGEXP } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
@@ -84,7 +84,7 @@ function createTripEditPointView(editTripPoint) {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${tripType}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.escape(destination.name)}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${destinationList}
             </datalist>
@@ -172,6 +172,8 @@ export default class TripEditPointView extends AbstractStatefulView {
     });
     this.element.querySelector('.event__reset-btn')
       .addEventListener('click', this.#deleteClickHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('change', this.#priceInputHandler);
 
     this.#setDatepickers();
   }
@@ -256,6 +258,16 @@ export default class TripEditPointView extends AbstractStatefulView {
   #deleteClickHandler = (event) => {
     event.preventDefault();
     this.#handleDeleteClick(this._state);
+  };
+
+  #priceInputHandler = (event) => {
+    event.preventDefault();
+    event.target.value = event.target.value.replace(/\D/g, '');
+    if(event.target.value.match(ONLY_NUMBERS_REGEXP)){
+      this.updateElement({
+        basePrice: event.target.value,
+      });
+    }
   };
 
   #setDatepickers() {

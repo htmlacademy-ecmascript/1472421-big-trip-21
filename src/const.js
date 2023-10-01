@@ -109,5 +109,7 @@ const BLANK_POINT = {
   tripType: 'Flight',
 };
 
+const ONLY_NUMBERS_REGEXP = new RegExp(/^\d+$/);
 
-export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT};
+
+export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT, ONLY_NUMBERS_REGEXP };
