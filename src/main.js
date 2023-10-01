@@ -6,6 +6,8 @@ import TripPointsModel from './models/model-trip-point.js';
 import FilterModel from './models/model-filter.js';
 import FilterPresenter from './presenter/presenter-trip-filter.js';
 import TripList from './view/trip-list-view.js';
+import PointsApiService from './points-api-service.js';
+import { AUTHORIZATION_TOKEN, END_POINT } from './const.js';
 
 
 const tripMain = document.querySelector('.trip-main');
@@ -14,7 +16,9 @@ const tripMainInfo = new TripMainInfo();
 
 /* Создаем экземпляр класса TripPointModel, который может вернуть с помощью метода getTripPoint()
 массив моковых данных точек маршрута */
-const tripPointsModel = new TripPointsModel();
+const tripPointsModel = new TripPointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION_TOKEN)
+});
 
 const filterPointsModel = new FilterModel();
 

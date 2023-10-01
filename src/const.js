@@ -118,5 +118,8 @@ const Method = {
   DELETE: 'DELETE'
 };
 
+const END_POINT = 'https://21.objects.pages.academy/big-trip';
 
-export {DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT, ONLY_NUMBERS_REGEXP, Method };
+const AUTHORIZATION_TOKEN = 'Basic 44ReerT85FJgww';
+
+export {AUTHORIZATION_TOKEN, END_POINT, DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT, ONLY_NUMBERS_REGEXP, Method };

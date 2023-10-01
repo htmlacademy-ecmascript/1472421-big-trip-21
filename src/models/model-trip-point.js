@@ -12,6 +12,26 @@ export default class TripPointsModel extends Observable {
   */
   #tripPoints = Array.from({length: POINT_COUNT}, generateTripPoint);
 
+  #pointsApiService = null;
+
+  constructor({pointsApiService}) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.getDestinations().then((destination) => {
+
+    });
+
+    this.#pointsApiService.getOffers().then((offers) => {
+
+    });
+
+    this.#pointsApiService.getPoints().then((points) => {
+
+    });
+
+  }
+
   get tripPoints(){
     return this.#tripPoints;
   }
