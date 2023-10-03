@@ -1,6 +1,6 @@
 import { generateTripPoint } from '../mock/mock-trip-point';
 import Observable from '../framework/observable';
-import { adaptedPointToClient } from '../utils/adapter';
+import { adaptedPointToClients } from '../utils/adapter';
 
 const POINT_COUNT = 4;
 
@@ -14,21 +14,29 @@ export default class TripPointsModel extends Observable {
   #tripPoints = Array.from({length: POINT_COUNT}, generateTripPoint);
 
   #pointsApiService = null;
+  #destinations = [];
+  #offers = new Map;
+  #points = null;
 
   constructor({pointsApiService}) {
     super();
     this.#pointsApiService = pointsApiService;
 
-    this.#pointsApiService.getDestinations().then((destinations) => {
-      /* console.log(destinations); */
+    /* метод getDestinations возвращает промис, поэтом дальше обрабатывает через then */
+    this.#pointsApiService.getDestinations().then((destination) => {
+      /* каждый элемент массива destinations с сервера спредим и через push добавляет в приватное свойство(массив) destinations*/
+      this.#destinations = [...destination];
     });
 
     this.#pointsApiService.getOffers().then((offers) => {
-      /* console.log(offers); */
+      offers.forEach((offer) => {
+        this.#offers.set(offer.type, offer.offers);
+      });
     });
 
     this.#pointsApiService.getPoints().then((points) => {
-      console.log(points.map(adaptedPointToClient));
+      this.#points = adaptedPointToClients(points, this.#offers, this.#destinations);
+      console.log(this.#points);
     });
 
   }

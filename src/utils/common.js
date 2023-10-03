@@ -11,5 +11,8 @@ function generateId() {
   return Math.floor(Math.random() * 3);
 }
 
+function getById(desiredArray, id){
+  return desiredArray.find((item) => item.id === id);
+}
 
-export {getRandomArrayElement, getRandomInt, generateId };
+export {getRandomArrayElement, getRandomInt, generateId, getById };

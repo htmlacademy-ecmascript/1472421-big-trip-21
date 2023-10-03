@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { getRandomInt } from './utils/common';
 import { generateId, getRandomArrayElement } from './utils/common';
 

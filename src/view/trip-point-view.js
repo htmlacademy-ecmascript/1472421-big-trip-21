@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { POINT_TYPE_ICON, OFFERS } from '../const';
+import { POINT_TYPE_ICON} from '../const';
 import dayjs from 'dayjs';
 
 function createSelectedOffers(offers) {
