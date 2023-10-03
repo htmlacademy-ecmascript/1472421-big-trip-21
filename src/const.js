@@ -87,8 +87,8 @@ const POINT_TYPE_ICON = getPointTypeIcon();
 
 const BLANK_POINT = {
   basePrice: 0,
-  dateFrom: dayjs(),
-  dateTo: dayjs(),
+  dateFrom: new Date(),
+  dateTo: new Date(),
   destination: {
     id: generateId(),
     name: 'Chamonix',

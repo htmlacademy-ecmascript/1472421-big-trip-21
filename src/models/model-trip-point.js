@@ -1,5 +1,6 @@
 import { generateTripPoint } from '../mock/mock-trip-point';
 import Observable from '../framework/observable';
+import { adaptedPointToClient } from '../utils/adapter';
 
 const POINT_COUNT = 4;
 
@@ -18,16 +19,16 @@ export default class TripPointsModel extends Observable {
     super();
     this.#pointsApiService = pointsApiService;
 
-    this.#pointsApiService.getDestinations().then((destination) => {
-
+    this.#pointsApiService.getDestinations().then((destinations) => {
+      /* console.log(destinations); */
     });
 
     this.#pointsApiService.getOffers().then((offers) => {
-
+      /* console.log(offers); */
     });
 
     this.#pointsApiService.getPoints().then((points) => {
-
+      console.log(points.map(adaptedPointToClient));
     });
 
   }

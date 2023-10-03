@@ -7,13 +7,15 @@ function createSelectedOffers(offers) {
   let offersList = '';
 
   offers.forEach((item) => {
-    offersList += `
+    if(item.isChecked){
+      offersList += `
       <li class="event__offer">
         <span class="event__offer-title">${item.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${item.price}</span>
       </li>
     `;
+    }
   });
 
   return `
@@ -28,11 +30,11 @@ function createTripPointView(tripPoint) {
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const { tripType, destination, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
+  const { tripType, destination, dateFrom, dateTo, basePrice, isFavorite, offers} = tripPoint;
 
   const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  const offersList = createSelectedOffers(OFFERS.get(tripType));
+  const offersList = createSelectedOffers(offers);
 
   /* Вставляем переменные в соответствующие места в шаблоне */
   return `
