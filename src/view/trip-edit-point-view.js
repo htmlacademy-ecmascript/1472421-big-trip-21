@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
-import { getByName } from '../utils/common';
 import { offersToMapOffers } from '../utils/point';
 
 function createEventTypeItem(currentType) {
