@@ -8,6 +8,8 @@ import FilterPresenter from './presenter/presenter-trip-filter.js';
 import TripList from './view/trip-list-view.js';
 import PointsApiService from './points-api-service.js';
 import { AUTHORIZATION_TOKEN, END_POINT } from './const.js';
+import OffersModel from './models/model-offers.js';
+import DestinationModel from './models/model-destination.js';
 
 
 const tripMain = document.querySelector('.trip-main');
@@ -16,12 +18,22 @@ const tripMainInfo = new TripMainInfo();
 
 /* Создаем экземпляр класса TripPointModel, который может вернуть с помощью метода getTripPoint()
 массив моковых данных точек маршрута */
-const tripPointsModel = new TripPointsModel({
+const offersModel = new OffersModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION_TOKEN)
 });
 
-const filterPointsModel = new FilterModel();
+const destinationsModel = new DestinationModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION_TOKEN)
+});
 
+const tripPointsModel = new TripPointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION_TOKEN),
+  destinationsModel,
+  offersModel
+});
+
+
+const filterPointsModel = new FilterModel();
 
 const newPointButton = new NewPointButton({
   onClick: handleClickNewPointButton
@@ -35,9 +47,11 @@ const tripListPresenter = new TripListPresenter({
   /* Помещаем экземпляр  tripPointsModel в конструктор презентера в виде
   второго свойства объекта, который передается на вход в конструктор*/
   tripPointsModel,
+  offersModel,
+  destinationsModel,
   filterPointsModel,
   tripList,
-  onNewPointDestroy: handleNewPointFormClose
+  onNewPointDestroy: handleNewPointFormClose,
 });
 
 const filterPresenter = new FilterPresenter({
@@ -45,6 +59,7 @@ const filterPresenter = new FilterPresenter({
   filterPointsModel,
   tripPointsModel
 });
+
 
 function handleNewPointFormClose() {
   newPointButton.element.disabled = false;
@@ -55,6 +70,7 @@ function handleClickNewPointButton() {
   newPointButton.element.disabled = false;
 }
 
+tripPointsModel.init();
 render(tripMainInfo, tripMain);
 filterPresenter.init();
 render(newPointButton, tripMain);

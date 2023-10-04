@@ -63,4 +63,14 @@ function isDateChange(point, updatePoint) {
   return dayjs(point.dateFrom).isSame(dayjs(updatePoint.dateFrom)) && dayjs(point.dateTo).isSame(dayjs(updatePoint.dateTo));
 }
 
-export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime, isDateChange};
+function offersToMapOffers(offers) {
+  const mapOffers = new Map();
+
+  offers.forEach((offer) => {
+    mapOffers.set(offer.type, offer.offers);
+  });
+
+  return mapOffers;
+}
+
+export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime, isDateChange, offersToMapOffers};

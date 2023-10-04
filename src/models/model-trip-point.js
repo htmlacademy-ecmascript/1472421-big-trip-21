@@ -1,8 +1,6 @@
-import { generateTripPoint } from '../mock/mock-trip-point';
 import Observable from '../framework/observable';
-import { adaptedPointToClients } from '../utils/adapter';
-
-const POINT_COUNT = 4;
+import { adaptedToClient } from '../utils/adapter';
+import { UpdateType } from '../const';
 
 export default class TripPointsModel extends Observable {
 
@@ -11,34 +9,37 @@ export default class TripPointsModel extends Observable {
      {length:POINT_COUNT} - означает, что мы передаем в .from массивоподнобный объект
      масивоподобный потому, что мы прописываем ему свойство length(длинна)
   */
-  #tripPoints = Array.from({length: POINT_COUNT}, generateTripPoint);
+  #tripPoints = [];
 
   #pointsApiService = null;
-  #destinations = [];
-  #offers = new Map;
-  #points = null;
+  #destinations = null;
+  #offers = null;
 
-  constructor({pointsApiService}) {
+
+  constructor({pointsApiService, destinationsModel, offersModel}) {
     super();
     this.#pointsApiService = pointsApiService;
+    this.#destinations = destinationsModel;
+    this.#offers = offersModel;
+  }
 
-    /* метод getDestinations возвращает промис, поэтом дальше обрабатывает через then */
-    this.#pointsApiService.getDestinations().then((destination) => {
-      /* каждый элемент массива destinations с сервера спредим и через push добавляет в приватное свойство(массив) destinations*/
-      this.#destinations = [...destination];
-    });
+  async init() {
 
-    this.#pointsApiService.getOffers().then((offers) => {
-      offers.forEach((offer) => {
-        this.#offers.set(offer.type, offer.offers);
-      });
-    });
+    try{
+      await Promise.all([
+        this.#destinations.init(),
+        this.#offers.init()
+      ]);
 
-    this.#pointsApiService.getPoints().then((points) => {
-      this.#points = adaptedPointToClients(points, this.#offers, this.#destinations);
-      console.log(this.#points);
-    });
+      const points = await this.#pointsApiService.getPoints();
 
+      this.#tripPoints = points.map(adaptedToClient);
+
+    } catch(err) {
+      this.#tripPoints = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   get tripPoints(){

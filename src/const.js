@@ -1,9 +1,9 @@
-import { getRandomInt } from './utils/common';
-import { generateId, getRandomArrayElement } from './utils/common';
+import { nanoid } from 'nanoid';
 
-const POINT_TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Geneva'];
-const DESTINATIONS_PHOTOS = ['img/photos/1.jpg', 'img/photos/2.jpg', 'img/photos/3.jpg'];
+
+const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Geneva', ];
+
 
 /*Функция создает, заполняет экземляр класса Map (pointTypeIcon) данными,
   где ключ - тип точки маршрута
@@ -13,31 +13,10 @@ const getPointTypeIcon = () => {
   const pointTypeIcon = new Map;
 
   POINT_TYPE.forEach((item) =>
-    pointTypeIcon.set(item, `../img/icons/${item.toLowerCase()}.png`)
+    pointTypeIcon.set(item, `../img/icons/${item}.png`)
   );
 
   return pointTypeIcon;
-};
-
-const getDiscription = () => {
-  const description = new Map;
-
-  description.set('Chamonix', 'Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy.');
-  description.set('Amsterdam', 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, quaerat!');
-  description.set('Geneva', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quae explicabo quia voluptatem eius!');
-
-  return description;
-};
-
-const getOffers = () => {
-  const offers = new Map;
-
-  POINT_TYPE.forEach((item) => {
-    offers.set(item, [{title: 'upgrade', price: 50, isChecked: Boolean(getRandomInt(0, 1))}, {title: `${item}`, price: 250, isChecked: Boolean(getRandomInt(0, 1))}]);
-  });
-
-  return offers;
-
 };
 
 /* Объект-перечисление(начинается с большой буквы + CamelCase) содержит названия типов фильтрации по времени точек маршрута*/
@@ -71,6 +50,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
 const NoPointTextType = {
@@ -80,8 +60,7 @@ const NoPointTextType = {
   [TimeFilter.PRESENT]: 'There are no present events now'
 };
 
-const OFFERS = getOffers();
-const DESCRIPTIONS = getDiscription();
+
 const POINT_TYPE_ICON = getPointTypeIcon();
 
 const BLANK_POINT = {
@@ -89,22 +68,22 @@ const BLANK_POINT = {
   dateFrom: new Date(),
   dateTo: new Date(),
   destination: {
-    id: generateId(),
+    id: nanoid(),
     name: 'Chamonix',
-    description: DESCRIPTIONS.get('Chamonix'),
-    photos: [
+    description: 'Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy.',
+    pictures: [
       {
-        src: getRandomArrayElement(DESTINATIONS_PHOTOS),
-        description: 'Any discription'
+        src: '',
+        description: ''
       },
       {
-        src: getRandomArrayElement(DESTINATIONS_PHOTOS),
-        description: 'Any discription'
+        src: '',
+        description: ''
       },
     ]
   },
-  isFavorite: Boolean(getRandomInt(0, 1)),
-  offers: OFFERS.get('Flight'),
+  isFavorite: false,
+  offers: '',
   tripType: 'Flight',
 };
 
@@ -121,4 +100,4 @@ const END_POINT = 'https://21.objects.pages.academy/big-trip';
 
 const AUTHORIZATION_TOKEN = 'Basic 44ReerT85FJgww';
 
-export {AUTHORIZATION_TOKEN, END_POINT, DESCRIPTIONS, OFFERS, DESTINATIONS_PHOTOS, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT, ONLY_NUMBERS_REGEXP, Method };
+export {AUTHORIZATION_TOKEN, END_POINT, DESTINATIONS, POINT_TYPE_ICON, POINT_TYPE, TimeFilter, Mode, SortType, UpdateType, UserAction, NoPointTextType, BLANK_POINT, ONLY_NUMBERS_REGEXP, Method };

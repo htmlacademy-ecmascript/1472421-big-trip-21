@@ -14,16 +14,25 @@ export default class TripPointPresenter {
   #handleDataChange = null;
   #mode = Mode.DEFAULT;
   #handleModeChange = null;
+  #offersData = null;
+  #destinationsData = null;
+
 
   constructor({tripList, onDataChange, onModeChange}) {
     this.#tripList = tripList;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
+
   }
 
-  init(tripPointData) {
+  init(tripPointData, offers, destinations) {
 
     this.#tripPointData = tripPointData;
+
+    /* Данные с сервера. Используются для отображения офферов в зависимости от типа маршрута */
+    this.#offersData = offers;
+
+    this.#destinationsData = destinations;
 
     /* Переменные, содержащие в себе свойства #point и #editPoint до переопределения, для проведения проверки
     при переотрисовке точки маршрута */
@@ -34,13 +43,18 @@ export default class TripPointPresenter {
     описывающую действия по клику на элемент точки маршрута "стрелка вниз" */
     this.#point = new TripPointView({
       tripPoint: this.#tripPointData,
+      offers: this.#offersData.offers,
+      destinations: this.#destinationsData.destinations,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
+
     this.#editPoint = new TripEditPointView({
       editTripPoint: this.#tripPointData,
+      offers: this.#offersData.offers,
+      destinations: this.#destinationsData.destinations,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onSubmitClick: this.#handleSubmitClick,
       onArrowClick: this.#handleArrowClick,

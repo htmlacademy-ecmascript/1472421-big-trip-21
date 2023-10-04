@@ -1,22 +1,24 @@
-import { POINT_TYPE, DESTINATIONS, DESCRIPTIONS, POINT_TYPE_ICON, OFFERS, BLANK_POINT, ONLY_NUMBERS_REGEXP } from '../const';
+import { POINT_TYPE, POINT_TYPE_ICON, BLANK_POINT, ONLY_NUMBERS_REGEXP } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
+import { getByName } from '../utils/common';
+import { offersToMapOffers } from '../utils/point';
 
 function createEventTypeItem(currentType) {
   return POINT_TYPE.map((typeItem) => `
     <div class="event__type-item">
-      <input id="event-type-${typeItem.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeItem.toLowerCase()}" ${currentType === typeItem ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${typeItem.toLowerCase()}" for="event-type-${typeItem.toLowerCase()}-1" data-type = ${typeItem}>${typeItem}</label>
+      <input id="event-type-${typeItem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeItem}" ${currentType === typeItem ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${typeItem}" for="event-type-${typeItem}-1" data-type = ${typeItem}>${typeItem.charAt(0).toUpperCase() + typeItem.slice(1)}</label>
     </div>
   `).join('');
 }
 
-function createDestinationList() {
-  return DESTINATIONS.map((destinationItem) => `
-    <option value="${destinationItem}"></option>
+function createDestinationList(destinations) {
+  return destinations.map((destinationItem) => `
+    <option value="${destinationItem.name}"></option>
   `).join('');
 }
 
@@ -38,27 +40,31 @@ function createOffersOptions(offers) {
   return offersOption;
 }
 
-function createDestinationPhotos(photos){
-  let photosList = '';
+function createDestinationPhotos(pictures){
+  let picturesList = '';
 
-  for(let i = 0; i < photos.length; i++) {
-    photosList += `<img class="event__photo" src="${photos[i].src}" alt="${photos[i].description}">`;
+  for(let i = 0; i < pictures.length; i++) {
+    picturesList += `<img class="event__photo" src="${pictures[i].src}" alt="${pictures[i].description}">`;
   }
 
-  return photosList;
+  return picturesList;
 }
 
-function createTripEditPointView(editTripPoint) {
+function createTripEditPointView(editTripPoint, offersData, destinationsData) {
 
-  const {tripType, dateFrom, dateTo, basePrice, destination, offers} = editTripPoint;
+  const {type, dateFrom, dateTo, basePrice, destination} = editTripPoint;
 
-  const eventTypeItem = createEventTypeItem(tripType);
+  const currentDestination = destinationsData.find((item) => item.id === destination);
 
-  const destinationList = createDestinationList();
+  const currentOffers = offersData.get(type);
 
-  const offersOption = createOffersOptions(offers);
+  const eventTypeItem = createEventTypeItem(type);
 
-  const destinationPhotos = createDestinationPhotos(destination.photos);
+  const destinationList = createDestinationList(destinationsData);
+
+  const offersOption = createOffersOptions(currentOffers);
+
+  const destinationPhotos = createDestinationPhotos(currentDestination.pictures);
 
 
   return `
@@ -68,7 +74,7 @@ function createTripEditPointView(editTripPoint) {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="${POINT_TYPE_ICON.get(tripType)}" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="${POINT_TYPE_ICON.get(type)}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -82,9 +88,9 @@ function createTripEditPointView(editTripPoint) {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${tripType}
+              ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.escape(destination.name)}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.escape(currentDestination.name)}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${destinationList}
             </datalist>
@@ -123,7 +129,7 @@ function createTripEditPointView(editTripPoint) {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destination.description}</p>
+            <p class="event__destination-description">${currentDestination.description}</p>
             <div class="event__photos-container">
               <div class="event__photos-tape">
                 ${destinationPhotos}
@@ -143,10 +149,14 @@ export default class TripEditPointView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
   #handleDeleteClick = null;
+  #offers = null;
+  #destinations = null;
 
-  constructor ({editTripPoint = BLANK_POINT, onSubmitClick, onArrowClick, onDeleteClick}) {
+  constructor ({editTripPoint = BLANK_POINT, offers, destinations, onSubmitClick, onArrowClick, onDeleteClick}) {
     super();
     this._setState(TripEditPointView.parsePointToState(editTripPoint));
+    this.#offers = offersToMapOffers(offers);
+    this.#destinations = destinations;
     this.#handleSubmitClick = onSubmitClick;
     this.#handleArrowClick = onArrowClick;
     this.#handleDeleteClick = onDeleteClick;
@@ -154,8 +164,9 @@ export default class TripEditPointView extends AbstractStatefulView {
     this._restoreHandlers();
   }
 
+
   get template() {
-    return createTripEditPointView(this._state);
+    return createTripEditPointView(this._state, this.#offers, this.#destinations);
   }
 
   _restoreHandlers() {
@@ -206,11 +217,10 @@ export default class TripEditPointView extends AbstractStatefulView {
     if(!event.target.classList.contains('event__type-label')){
       return;
     }
-
     event.preventDefault();
     this.updateElement({
       tripType: event.target.dataset.type,
-      offers: OFFERS.get(event.target.dataset.type)
+      offers: this._state.offers //тут должен быть поиск из offers с
     });
   };
 
@@ -220,7 +230,7 @@ export default class TripEditPointView extends AbstractStatefulView {
       destination: {
         ...this._state.destination,
         name: event.target.value,
-        description: DESCRIPTIONS.get(event.target.value)
+        description: event.target.value
       },
     });
   };
@@ -306,11 +316,6 @@ export default class TripEditPointView extends AbstractStatefulView {
   static parsePointToState(point) {
     return {
       ...point,
-      destination:{
-        ...point.destination,
-        name: point.destination['name'],
-      },
-      offers: [...point.offers]
     };
   }
 

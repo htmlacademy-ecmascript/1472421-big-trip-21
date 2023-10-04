@@ -6,6 +6,7 @@ import { SortType, UpdateType, UserAction, TimeFilter } from '../const.js';
 import { sortTypeDay, sortTypePrice, sortTypeTime } from '../utils/point.js';
 import { filter } from '../utils/filter.js';
 import NewPointPresenter from './presenter-new-trip-point.js';
+import LoadingView from '../view/loading-view.js';
 
 
 export default class tripListPresenter{
@@ -17,6 +18,11 @@ export default class tripListPresenter{
   #noPointView = null;
   #filterPointsModel = null;
   #newPointPresenter = null;
+  #loadingView = null;
+  #isLoading = true;
+  #offersModel = null;
+  #destinationsModel = null;
+
 
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
@@ -26,9 +32,11 @@ export default class tripListPresenter{
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
   */
-  constructor({boardContainer, tripPointsModel, tripList, filterPointsModel, onNewPointDestroy }) {
+  constructor({boardContainer, tripPointsModel, offersModel, destinationsModel, tripList, filterPointsModel, onNewPointDestroy }) {
     this.#boardContainer = boardContainer;
     this.#tripPointsModel = tripPointsModel;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
     this.#filterPointsModel = filterPointsModel;
     this.#tripList = tripList;
 
@@ -68,14 +76,14 @@ export default class tripListPresenter{
     this.#newPointPresenter.init();
   }
 
-  #renderPoint(tripPointData) {
+  #renderPoint(tripPointData, offers, destinations) {
     const pointPresenter = new TripPointPresenter({
       tripList: this.#tripList,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
 
-    pointPresenter.init(tripPointData);
+    pointPresenter.init(tripPointData, offers, destinations);
     /* При отрисовке каждой ТМ, экземпляр класса презентера ТМ сохраняется в массиве таких экземпляров
     по id, получаемому из объекта моковых данных */
     this.#pointsPresenters.set(tripPointData.id, pointPresenter);
@@ -88,6 +96,12 @@ export default class tripListPresenter{
     });
 
     render(this.#noPointView, this.#tripList.element);
+  }
+
+  #renderLoading() {
+    this.#loadingView = new LoadingView();
+
+    render(this.#loadingView, this.#tripList.element);
   }
 
   #renderTripSortForm() {
@@ -134,6 +148,11 @@ export default class tripListPresenter{
         this.#clearPointBoard({resetSortType: true});
         this.#renderPointBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingView);
+        this.#renderPointBoard();
+        break;
     }
   };
 
@@ -157,19 +176,22 @@ export default class tripListPresenter{
 
   /* Метод отрисовывает весь список точек с кнопками сортировки */
   #renderPointBoard() {
-
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     this.#renderTripSortForm();
 
     this.#renderTripList();
 
     if(this.tripPoints.length === 0) {
       this.#renderNoPoint();
+      return;
     }
 
     for(let i = 0; i < this.tripPoints.length; i++){
-      this.#renderPoint(this.tripPoints[i]);
+      this.#renderPoint(this.tripPoints[i], this.#offersModel, this.#destinationsModel);
     }
-
   }
 
   /* Метод для очистки списка ТМ */
@@ -180,6 +202,7 @@ export default class tripListPresenter{
     this.#pointsPresenters.clear();
 
     remove(this.#tripSortForm);
+    remove(this.#loadingView);
 
     if(this.#noPointView){
       remove(this.#noPointView);
