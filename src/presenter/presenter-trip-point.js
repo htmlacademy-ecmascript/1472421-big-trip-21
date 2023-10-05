@@ -2,6 +2,8 @@ import TripEditPointView from '../view/trip-edit-point-view';
 import TripPointView from '../view/trip-point-view';
 import { replace, render, remove } from '../framework/render';
 import { Mode } from '../const';
+import { UserAction, UpdateType } from '../const';
+import { isDateChange } from '../utils/point';
 
 export default class TripPointPresenter {
 
@@ -12,16 +14,25 @@ export default class TripPointPresenter {
   #handleDataChange = null;
   #mode = Mode.DEFAULT;
   #handleModeChange = null;
+  #offersData = null;
+  #destinationsData = null;
+
 
   constructor({tripList, onDataChange, onModeChange}) {
     this.#tripList = tripList;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
+
   }
 
-  init(tripPointData) {
+  init(tripPointData, offers, destinations) {
 
     this.#tripPointData = tripPointData;
+
+    /* Данные с сервера. Используются для отображения офферов в зависимости от типа маршрута */
+    this.#offersData = offers;
+
+    this.#destinationsData = destinations;
 
     /* Переменные, содержащие в себе свойства #point и #editPoint до переопределения, для проведения проверки
     при переотрисовке точки маршрута */
@@ -32,16 +43,22 @@ export default class TripPointPresenter {
     описывающую действия по клику на элемент точки маршрута "стрелка вниз" */
     this.#point = new TripPointView({
       tripPoint: this.#tripPointData,
+      offers: this.#offersData.offers,
+      destinations: this.#destinationsData.destinations,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onEditClick: this.#handleEditClick,
-      onFavoriteClick: this.#handleFavoriteClick
+      onFavoriteClick: this.#handleFavoriteClick,
     });
+
 
     this.#editPoint = new TripEditPointView({
       editTripPoint: this.#tripPointData,
+      offers: this.#offersData.offers,
+      destinations: this.#destinationsData.destinations,
       /* по клику на "стрелка вниз" вместо view точки маршрута, должна отрисоваться view редактирование точки маршрута*/
       onSubmitClick: this.#handleSubmitClick,
-      onArrowClick: this.#handleArrowClick
+      onArrowClick: this.#handleArrowClick,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     /* При отрисовке(вызове метода init) данный блок проверит, были ли раньше отрисованы ТМ или РТМ,
@@ -79,17 +96,36 @@ export default class TripPointPresenter {
     this.#replaceEditPointToPoint();
   };
 
-  #handleSubmitClick = (tripPointData) => {
-    this.#handleDataChange(tripPointData);
+  #handleSubmitClick = (updateTripPointData) => {
+    const isMinorUpdateType = !isDateChange(this.#tripPointData, updateTripPointData);
+
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdateType ? UpdateType.MINOR : UpdateType.PATCH,
+      updateTripPointData
+    );
     this.#replaceEditPointToPoint();
   };
 
   /* метод, срабатывающий при клике на звездочку и вызывающий метод, обрабатывающий изменения,
-  которой на вход примет объект, на котором сработал клик и заменить там значение поля issFavorite */
+  которой на вход примет объект, на котором сработал клик и заменить там значение поля isFavorite */
   #handleFavoriteClick = () => {
     /* оператор (...) нужен потому, что tripPointData по сути массив из одного элемента
      */
-    this.#handleDataChange({...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#tripPointData, isFavorite: !this.#tripPointData.isFavorite}
+    );
+  };
+
+  #handleDeleteClick = (tripPointData) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      tripPointData
+    );
   };
 
   #escKeyDownHandler = (event) => {

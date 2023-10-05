@@ -1,28 +1,28 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 
-function createTripMainFilterItem(filterPointItem){
+function createTripMainFilterItem(filter, currentType){
 
-  const {timeFilterType, countFilterPoints} = filterPointItem;
+  const {type: filterType, count: filterCount} = filter;
 
   return `
     <div class="trip-filters__filter">
-      <input id="filter-${timeFilterType}"
+      <input id="filter-${filterType}"
         class="trip-filters__filter-input
         visually-hidden" type="radio"
         name="trip-filter"
-        value="${timeFilterType}"
-        ${timeFilterType === 'everything' ? 'checked' : ''}
-        ${countFilterPoints === 0 ? 'disabled' : ''}
+        value="${filterType}"
+        ${filterType === currentType ? 'checked' : ''}
+        ${filterCount === 0 ? 'disabled' : ''}
       >
-      <label class="trip-filters__filter-label" for="filter-${timeFilterType}">${timeFilterType}</label>
+      <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType}</label>
     </div>
   `;
 }
 
-function createTripMainFilter(filterPointsItem) {
+function createTripMainFilter(filters, currentType) {
 
-  const filterItemsTemlate = filterPointsItem.map(createTripMainFilterItem).join('');
+  const filterItemsTemlate = filters.map((filter) => createTripMainFilterItem(filter, currentType)).join('');
 
   return `
   <div class="trip-main__trip-controls  trip-controls">
@@ -38,16 +38,27 @@ function createTripMainFilter(filterPointsItem) {
 }
 
 /* Компонент, отвечающий за раздел фильтров в блоке trip-main */
-export default class TripMainControl extends AbstractView {
+export default class TripMainFilter extends AbstractView {
 
-  #filterPoints = [];
+  #filters = [];
+  #currentFilter = null;
+  #handleFilterTypeChange = null;
 
-  constructor(filterPoints){
+  constructor({filters, currentFilterType, onFilterTypeChange}){
     super();
-    this.#filterPoints = filterPoints;
+    this.#filters = filters;
+    this.#currentFilter = currentFilterType;
+    this.#handleFilterTypeChange = onFilterTypeChange;
+
+    this.element.addEventListener('change', this.#filterTypeChangeHandler);
   }
 
+  #filterTypeChangeHandler = (event) => {
+    event.preventDefault();
+    this.#handleFilterTypeChange(event.target.value);
+  };
+
   get template() {
-    return createTripMainFilter(this.#filterPoints);
+    return createTripMainFilter(this.#filters, this.#currentFilter);
   }
 }

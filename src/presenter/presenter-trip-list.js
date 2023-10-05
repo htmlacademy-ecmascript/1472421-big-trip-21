@@ -1,135 +1,219 @@
-import { render } from '../framework/render.js';
+import { remove, render } from '../framework/render.js';
 import NoPointView from '../view/trip-no-point-view.js';
 import TripPointPresenter from './presenter-trip-point.js';
 import TripSortForm from '../view/trip-sort-form-view.js';
-import { updateItem } from '../utils/common.js';
-import { SortType } from '../const.js';
-import { sortTypePrice, sortTypeTime } from '../utils/point.js';
+import { SortType, UpdateType, UserAction, TimeFilter } from '../const.js';
+import { sortTypeDay, sortTypePrice, sortTypeTime } from '../utils/point.js';
+import { filter } from '../utils/filter.js';
+import NewPointPresenter from './presenter-new-trip-point.js';
+import LoadingView from '../view/loading-view.js';
 
 
 export default class tripListPresenter{
 
-  #tripEventsContainer = null;
+  #boardContainer = null;
   #tripPointsModel = null;
   #tripSortForm = null;
   #tripList = null;
-  #tripPoints = [];
+  #noPointView = null;
+  #filterPointsModel = null;
+  #newPointPresenter = null;
+  #loadingView = null;
+  #isLoading = true;
+  #offersModel = null;
+  #destinationsModel = null;
+
+
   #pointsPresenters = new Map;
   #currentSortType = SortType.DAY;
-  #sourcedTripPoints = [];
+  #timeFilterType = TimeFilter.EVERYTHING;
+
 
   /* Добавляем возможность получать на вход в конструкторе массив точек маршрута
     tripPointsModel и записываем массив в свойства
   */
-  constructor({tripEventsContainer, tripPointsModel, tripList }) {
-    this.#tripEventsContainer = tripEventsContainer;
+  constructor({boardContainer, tripPointsModel, offersModel, destinationsModel, tripList, filterPointsModel, onNewPointDestroy }) {
+    this.#boardContainer = boardContainer;
     this.#tripPointsModel = tripPointsModel;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
+    this.#filterPointsModel = filterPointsModel;
     this.#tripList = tripList;
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointsContainer: this.#tripList.element,
+      onDataChange: this.#handleViewAction,
+      onNewPointDestroy,
+    });
+
+
+    this.#tripPointsModel.addObserver(this.#handleModelEvent);
+    /* Добавляем подписчика на изменение на изменение модели */
+    this.#filterPointsModel.addObserver(this.#handleModelEvent);
   }
 
-  #renderPoint(tripPointData) {
+  get tripPoints() {
+
+    this.#timeFilterType = this.#filterPointsModel.filter;
+    const tripPoints = this.#tripPointsModel.tripPoints;
+    const filteredTripPoints = filter[this.#timeFilterType](tripPoints);
+
+    switch(this.#currentSortType){
+      /* Если тип сортировки, соответствует сортировки по цене */
+      case SortType.PRICE:
+        /* выполнится сортировка массива данных в соответствии с колбекфункцией сортировки */
+        return filteredTripPoints.sort(sortTypePrice);
+      case SortType.TIME:
+        return filteredTripPoints.sort(sortTypeTime);
+      default:
+        return filteredTripPoints.sort(sortTypeDay);
+    }
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterPointsModel.setFilter(UpdateType.MAJOR, TimeFilter.EVERYTHING);
+    this.#newPointPresenter.init();
+  }
+
+  #renderPoint(tripPointData, offers, destinations) {
     const pointPresenter = new TripPointPresenter({
       tripList: this.#tripList,
-      onDataChange: this.#handleDataChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
 
-    pointPresenter.init(tripPointData);
+    pointPresenter.init(tripPointData, offers, destinations);
     /* При отрисовке каждой ТМ, экземпляр класса презентера ТМ сохраняется в массиве таких экземпляров
     по id, получаемому из объекта моковых данных */
     this.#pointsPresenters.set(tripPointData.id, pointPresenter);
   }
 
   #renderNoPoint() {
-    render(new NoPointView(), this.#tripList.element);
+
+    this.#noPointView = new NoPointView({
+      timeFilterType: this.#timeFilterType
+    });
+
+    render(this.#noPointView, this.#tripList.element);
+  }
+
+  #renderLoading() {
+    this.#loadingView = new LoadingView();
+
+    render(this.#loadingView, this.#tripList.element);
   }
 
   #renderTripSortForm() {
 
-    this.#tripSortForm = new TripSortForm({onSortTypeChange: this.#handleSortTypeChange});
+    this.#tripSortForm = new TripSortForm({
+      currentSortType: this.#currentSortType,
+      onSortTypeChange: this.#handleSortTypeChange,
+      isPointListClear: this.tripPoints.length === 0
+    });
 
-    render(this.#tripSortForm, this.#tripEventsContainer);
+    render(this.#tripSortForm, this.#boardContainer);
   }
 
   #renderTripList(){
-    render(this.#tripList, this.#tripEventsContainer);
+    render(this.#tripList, this.#boardContainer);
   }
 
-  /* Метод для обновления ТМ */
-  #handleDataChange = (updatedPoint) => {
-    /*функция при обновлении ТМ проверяет какая ТМ из массива ТМ обновилась, заменяется
-    в массиве ТМ на обновленную и возвращает массив ТМ с обновленной ТМ */
-    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints, updatedPoint);
-    /* В списке всех экземпляров презентера ТМ по id находим презентер с ТМ, которая обновилась
-    запускаем у презентера метод init, передаем в метод обновленные данные ТМ*/
-    this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
+  /* При изменеинии, внесенном пользователем, в эту функцию попадут данные о типе изменения
+  действии пользователя и данные состояния */
+  #handleViewAction = (actionType, updateType, update) => {
+    switch(actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#tripPointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#tripPointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#tripPointsModel.deletePoint(updateType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointsPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearPointBoard();
+        this.#renderPointBoard();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearPointBoard({resetSortType: true});
+        this.#renderPointBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingView);
+        this.#renderPointBoard();
+        break;
+    }
   };
 
   /* Метод, который при изменении режима ТМ на редактирование, закрывает все другие формы редактирования*/
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
-
-  #sortPoint(sortType) {
-
-    switch(sortType){
-      /* Если тип сортировки, соответствует сортировки по цене */
-      case SortType.PRICE:
-        /* выполнится сортировка массива данных в соответствии с колбекфункцией сортировки */
-        this.#tripPoints.sort(sortTypePrice);
-        break;
-      case SortType.TIME:
-        this.#tripPoints.sort(sortTypeTime);
-        break;
-      default:
-        this.#tripPoints = [...this.#sourcedTripPoints];
-    }
-
-    this.#currentSortType = sortType;
-  }
 
   #handleSortTypeChange = (sortType) => {
     if(this.#currentSortType === sortType){
       return;
     }
-    /* Сортируем массив данных в соответствии с заданным параметром сортировки */
-    this.#sortPoint(sortType);
+    /* Меняем текущий тип сортировки*/
+    this.#currentSortType = sortType;
     /* Очищаем ранее отрисованный список ТМ */
-    this.#clearPointlist();
-    /* Отрисовываем список заново, при отрисовке данные будут браться из массива tripPoints который уже отсортирован методом sortType */
-    this.#renderPointList();
+    this.#clearPointBoard();
+    /* Отрисовываем список заново, при отрисовке данные будут браться из массива tripPoints который уже отсортирован при получении */
+    this.#renderPointBoard();
   };
 
   /* Метод отрисовывает весь список точек с кнопками сортировки */
-  #renderPointList() {
+  #renderPointBoard() {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+    this.#renderTripSortForm();
 
     this.#renderTripList();
 
-    if(this.#tripPoints.length === 0) {
+    if(this.tripPoints.length === 0) {
       this.#renderNoPoint();
+      return;
     }
 
-    for(let i = 0; i < 4; i++){
-      this.#renderPoint(this.#tripPoints[i]);
+    for(let i = 0; i < this.tripPoints.length; i++){
+      this.#renderPoint(this.tripPoints[i], this.#offersModel, this.#destinationsModel);
     }
-
   }
 
   /* Метод для очистки списка ТМ */
-  #clearPointlist() {
+  #clearPointBoard(resetSortType = false) {
+
+    this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.destroy());
     this.#pointsPresenters.clear();
+
+    remove(this.#tripSortForm);
+    remove(this.#loadingView);
+
+    if(this.#noPointView){
+      remove(this.#noPointView);
+    }
+
+    if(resetSortType){
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   init() {
-    /* Создаем свойство, в котором будет храниться копия массива моковох данных точек маршрута*/
-    this.#tripPoints = [...this.#tripPointsModel.getTripPoint()];
-
-    /* Сделаем копию массива моковых данных еще раз, что бы можно было вернуться к начальному состоянию при сортировке */
-    this.#sourcedTripPoints = [...this.#tripPointsModel.getTripPoint()];
-
-    this.#renderTripSortForm();
-    this.#renderPointList();
+    this.#renderPointBoard();
   }
 }

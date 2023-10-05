@@ -59,4 +59,18 @@ function sortTypeTime(pointA, pointB) {
   return weight ?? durationA - durationB;
 }
 
-export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime};
+function isDateChange(point, updatePoint) {
+  return dayjs(point.dateFrom).isSame(dayjs(updatePoint.dateFrom)) && dayjs(point.dateTo).isSame(dayjs(updatePoint.dateTo));
+}
+
+function offersToMapOffers(offers) {
+  const mapOffers = new Map();
+
+  offers.forEach((offer) => {
+    mapOffers.set(offer.type, offer.offers);
+  });
+
+  return mapOffers;
+}
+
+export {isPointExpired, isPointActual, isPointFuter, sortTypePrice, sortTypeDay, sortTypeTime, isDateChange, offersToMapOffers};

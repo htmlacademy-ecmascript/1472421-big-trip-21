@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { POINT_TYPE_ICON, OFFERS } from '../const';
+import { POINT_TYPE_ICON } from '../const';
 import dayjs from 'dayjs';
 
 function createSelectedOffers(offers) {
@@ -7,13 +7,15 @@ function createSelectedOffers(offers) {
   let offersList = '';
 
   offers.forEach((item) => {
-    offersList += `
+    if(item.isChecked){
+      offersList += `
       <li class="event__offer">
         <span class="event__offer-title">${item.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${item.price}</span>
       </li>
     `;
+    }
   });
 
   return `
@@ -23,16 +25,18 @@ function createSelectedOffers(offers) {
   `;
 }
 
-function createTripPointView(tripPoint) {
+function createTripPointView(tripPoint, destinations, offers) {
 
   /* Деструктурируем объект, распределяя значение полей объекта
     по одноименным созданным переменным
   */
-  const { tripType, destination, dateFrom, dateTo, basePrice, isFavorite, } = tripPoint;
+  const { type, dateFrom, dateTo, basePrice, isFavorite, destination} = tripPoint;
+
+  const currentDestination = destinations.find((item) => item.id === destination);
 
   const favoritePointClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  const offersList = createSelectedOffers(OFFERS.get(tripType));
+  const offersList = createSelectedOffers(offers);
 
   /* Вставляем переменные в соответствующие места в шаблоне */
   return `
@@ -40,9 +44,9 @@ function createTripPointView(tripPoint) {
       <div class="event">
         <time class="event__date" datetime="2019-03-18">${dayjs(dateFrom).format('MMM D')}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="${POINT_TYPE_ICON.get(tripType)}" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="${POINT_TYPE_ICON.get(type)}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${tripType} ${destination.name}</h3>
+        <h3 class="event__title">${type} ${currentDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${dateFrom}">${dayjs(dateFrom).format('HH:mm')}</time>
@@ -75,26 +79,26 @@ export default class TripPointView extends AbstractView {
   #tripPoint = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
-  /* Делаем возможным принимать на вход объект со свойством, хранящим в себе объект
-    моковых данных
-   */
-  constructor ({tripPoint, onEditClick, onFavoriteClick}){
+  #offers = null;
+  #destinations = null;
+
+  constructor ({tripPoint, offers, destinations, onEditClick, onFavoriteClick}){
     super();
-    /* Записываем объект моковых данных точки маршрута в свойство  */
     this.#tripPoint = tripPoint;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
-    /* По клику на кнопку favorite вызовится обработчик события */
     this.element.querySelector('.event__favorite-btn')
       .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
-    /* Передаем в функцию создания шаблона объект моковых данных */
-    return createTripPointView(this.#tripPoint);
+    /* Передаем в функцию создания шаблона объект c данными о точке и массивы данных о оферах и объектах назначения */
+    return createTripPointView(this.#tripPoint, this.#destinations, this.#offers);
   }
 
   #editClickHandler = (event) => {

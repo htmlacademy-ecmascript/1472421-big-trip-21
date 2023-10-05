@@ -1,11 +1,11 @@
 import AbstractView from '../framework/view/abstract-view';
 import { SortType } from '../const';
 
-function createTripSortForm(){
+function createTripSortForm(currentSortType, isPointListClear){
   return `
     <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <div class="trip-sort__item  trip-sort__item--day">
-        <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+        <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" ${currentSortType === SortType.DAY ? 'checked' : ''} ${isPointListClear ? 'disabled' : ''}>
         <label class="trip-sort__btn" for="sort-day" data-sort-type = '${SortType.DAY}'>Day</label>
       </div>
 
@@ -15,12 +15,12 @@ function createTripSortForm(){
       </div>
 
       <div class="trip-sort__item  trip-sort__item--time">
-        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time"  ${currentSortType === SortType.TIME ? 'checked' : ''} ${isPointListClear ? 'disabled' : ''}>
         <label class="trip-sort__btn" for="sort-time" data-sort-type = '${SortType.TIME}'>Time</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--price">
-        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price"  ${currentSortType === SortType.PRICE ? 'checked' : ''} ${isPointListClear ? 'disabled' : ''}>
         <label class="trip-sort__btn" for="sort-price" data-sort-type = '${SortType.PRICE}'>Price</label>
       </div>
 
@@ -37,12 +37,18 @@ function createTripSortForm(){
 export default class TripSortForm extends AbstractView {
 
   #handleSortTypeChange = null;
+  #currentSortType = null;
+  #isPointListClear = null;
 
-  constructor({onSortTypeChange}){
+  constructor({currentSortType, onSortTypeChange, isPointListClear}){
     super();
+    this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
+    this.#isPointListClear = isPointListClear;
 
-    this.element.addEventListener('click', this.#sortTypeClickHandler);
+    if(!isPointListClear) {
+      this.element.addEventListener('click', this.#sortTypeClickHandler);
+    }
   }
 
   /* Функция, вызываемая при клике на форму сортировки */
@@ -58,6 +64,6 @@ export default class TripSortForm extends AbstractView {
   };
 
   get template() {
-    return createTripSortForm();
+    return createTripSortForm(this.#currentSortType, this.#isPointListClear);
   }
 }

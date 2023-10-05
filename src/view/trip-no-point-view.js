@@ -1,20 +1,24 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { NoPointTextType } from '../const.js';
 
 
-function createNoPointTemplate() {
+function createNoPointTemplate(timeTypeFilter) {
   return `
-    <p class="trip-events__msg">Click New Event to create your first point</p>
+    <p class="trip-events__msg">${NoPointTextType[timeTypeFilter]}</p>
   `;
 }
 
 /* Компонент, отвечающий за раздел информации о путешествии в блоке trip-main */
 export default class NoPointView extends AbstractView {
 
-  constructor(){
+  #timeFilterType = null;
+
+  constructor({timeFilterType}){
     super();
+    this.#timeFilterType = timeFilterType;
   }
 
   get template() {
-    return createNoPointTemplate();
+    return createNoPointTemplate(this.#timeFilterType);
   }
 }
